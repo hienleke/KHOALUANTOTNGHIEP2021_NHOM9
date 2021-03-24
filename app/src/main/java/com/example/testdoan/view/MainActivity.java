@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,12 +16,17 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 import com.example.testdoan.R;
 import com.example.testdoan.externalView.Tools;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
 import  com.example.testdoan.externalView.HorizontalCalendarView;
-
-
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -32,19 +38,22 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private ArrayList datesToBeColored;
     Calendar starttime,endtime;
+    public static FirebaseFirestore db ;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseFirestore.setLoggingEnabled(true);
+        db = FirebaseFirestore.getInstance();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         actionBar = getActionBar();
         container = findViewById(R.id.containerFramelayout);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.containerFramelayout, Expense.newInstance("asdfsa","asdfas")).commit();
+        fragmentManager.beginTransaction().add(R.id.containerFramelayout, ExpenseFragment.newInstance("asdfsa","asdfas")).commit();
         handleNavigation();
 
        calendarView = findViewById(R.id.calendar);
@@ -72,7 +81,26 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
+        Map<String, Object> user = new HashMap<>();
+        user.put("first", "Ada");
+        user.put("last", "Lovelace");
+        user.put("born", 1815);
 
+// Add a new document with a generated ID
+        db.collection("users")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("asdfasdf", "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("asdfas", "Error adding document", e);
+                    }
+                });
 
 
     }
@@ -179,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.menu_expense:
-                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout,Expense.newInstance("asdf","asdfa")).commit();
+                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance("asdf","asdfa")).commit();
                     break;
                 case R.id.menu_report:
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Report.newInstance()).commit();

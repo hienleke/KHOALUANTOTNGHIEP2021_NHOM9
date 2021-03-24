@@ -1,18 +1,12 @@
 package com.example.testdoan;
 
 import android.content.Context;
-import android.os.Debug;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.testdoan.dao.AppDatabase;
-import com.example.testdoan.dao.CategoryDao;
-import com.example.testdoan.dao.UserDao;
 import com.example.testdoan.model.Category;
 import com.example.testdoan.model.Expense;
 import com.example.testdoan.model.User;
@@ -24,7 +18,6 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.List;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.Matchers.equalTo;

@@ -85,4 +85,6 @@ public class Expense {
     public void setApplytobudget(boolean applytobudget) {
         this.applytobudget = applytobudget;
     }
+
+
 }

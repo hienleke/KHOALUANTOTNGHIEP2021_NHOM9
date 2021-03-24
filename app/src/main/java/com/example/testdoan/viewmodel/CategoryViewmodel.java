@@ -20,6 +20,6 @@ public class CategoryViewmodel  extends AndroidViewModel {
 
     public void insert(Category category)
     {
-        categoryRepository.insert(category);
+
     }
 }

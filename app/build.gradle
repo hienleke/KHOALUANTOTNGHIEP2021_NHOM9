@@ -41,9 +41,11 @@ android {
 dependencies {
 
     implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
+    implementation platform('com.google.firebase:firebase-bom:26.7.0')
 
-
-    implementation 'com.google.firebase:firebase-firestore:22.1.1'
+    // Declare the dependency for the Cloud Firestore library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-firestore'
     def room_version = "2.2.6"
 
     implementation "androidx.room:room-runtime:$room_version"

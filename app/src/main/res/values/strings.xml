@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name"></string>
+    <string name="setting">setting</string>
+    <string name="hangngay">hangngay</string>
+    <string name="thongke">thongke</string>
+
+    <string name="note">Note</string>
+    <string name="time">Time</string>
+    <string name="category">Category</string>
+    <string name="money">Amount</string>
+    <string name="Debitrepay">+ Debit/Repay</string>
+    <string name="expenseIncome">+ Expense/Income</string>
+    <string name="taikhoan">taikhoan</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item  android:id="@+id/optionmenu_bydate"
+        android:title="Date"/>
+    <item  android:id="@+id/optionmenu_byweek"
+        android:title="Week"/>
+    <item  android:id="@+id/optionmenu_bymonth"
+        android:title="Month"/>
+    <item  android:id="@+id/optionmenu_byyear"
+        android:title="Year" />
+</menu>

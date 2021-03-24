@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_expense"
+        android:icon="@drawable/credit_card"
+        android:title="Expense" />
+    <item
+        android:id="@+id/menu_report"
+        android:icon="@drawable/reporticon"
+        android:title="Report" />
+    <item
+        android:id="@+id/menu_planning"
+        android:icon="@drawable/planning"
+        android:title="Planning" />
+    <item
+        android:id="@+id/menu_setting"
+        android:icon="@drawable/settings"
+        android:title="Setting" />
+
+</menu>

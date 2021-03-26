@@ -26,12 +26,9 @@ import java.util.List;
 
 public class ExpenseFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private Button openFormAddDebitorRepay;
@@ -126,9 +123,10 @@ public class ExpenseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_expense, container, false);
-        openFormAddDebitorRepay= v.findViewById(R.id.addDebit_repaybtn);
-        openFormAddExpenseIncome =v.findViewById(R.id.addExpense_incomeBtn);
+        openFormAddDebitorRepay= v.findViewById(R.id.addIncome);
+        openFormAddExpenseIncome =v.findViewById(R.id.addExpense);
         recyclerView=v.findViewById(R.id.iteam_debit_expense_recycleview);
+
 
         openFormAddExpenseIncome.setOnClickListener(new View.OnClickListener() {
             @Override

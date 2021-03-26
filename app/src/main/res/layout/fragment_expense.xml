@@ -8,21 +8,23 @@
 
 
     <Button
-        android:id="@+id/addExpense_incomeBtn"
+        android:id="@+id/addExpense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/expenseIncome"
-        app:layout_constraintEnd_toStartOf="@+id/addDebit_repaybtn"
+        android:text="@string/income"
+        app:layout_constraintBottom_toTopOf="@+id/iteam_debit_expense_recycleview"
+        app:layout_constraintEnd_toStartOf="@+id/addIncome"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/addDebit_repaybtn"
+        android:id="@+id/addIncome"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/Debitrepay"
+        android:text="@string/expense"
+        app:layout_constraintBottom_toTopOf="@+id/iteam_debit_expense_recycleview"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/addExpense_incomeBtn"
+        app:layout_constraintStart_toEndOf="@+id/addExpense"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -32,7 +34,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addExpense_incomeBtn">
+        app:layout_constraintTop_toBottomOf="@+id/addExpense">
 
     </androidx.recyclerview.widget.RecyclerView>
 

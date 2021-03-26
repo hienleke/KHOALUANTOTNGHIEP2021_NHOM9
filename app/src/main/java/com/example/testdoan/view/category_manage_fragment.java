@@ -78,11 +78,6 @@ public class category_manage_fragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewPager2 = view.findViewById(R.id.viewpager2_category_manage);
-        viewPager2.setAdapter(new CategoryAdapterViewpager(this));
-        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
-        new TabLayoutMediator(tabLayout, viewPager2,
-                (tab, position) -> tab.setText("OBJECT " + (position + 1))
-        ).attach();
+
     }
 }

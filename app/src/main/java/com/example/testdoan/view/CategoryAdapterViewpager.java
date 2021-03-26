@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
@@ -18,8 +20,8 @@ import java.util.List;
 public class CategoryAdapterViewpager  extends FragmentStateAdapter {
 
 
-    public CategoryAdapterViewpager(@NonNull Fragment fragment) {
-        super(fragment);
+    public CategoryAdapterViewpager(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+        super(fragmentManager, lifecycle);
     }
 
     @NonNull

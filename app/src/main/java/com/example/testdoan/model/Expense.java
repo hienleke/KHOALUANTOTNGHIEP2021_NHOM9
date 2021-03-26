@@ -3,23 +3,32 @@ package com.example.testdoan.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.Timestamp;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 
-@Entity
 public class Expense {
-    @PrimaryKey(autoGenerate = true)
     private int id;
 
     private int categoryID;
-    private Calendar timeCreated;
+    private Timestamp timeCreated;
     private String note;
     private double worth;
     private boolean applytobudget;
     private boolean isGet;
 
 
+    public Expense(int id, int categoryID, Timestamp timeCreated, String note, double worth, boolean applytobudget, boolean isGet) {
+        this.id = id;
+        this.categoryID = categoryID;
+        this.timeCreated = timeCreated;
+        this.note = note;
+        this.worth = worth;
+        this.applytobudget = applytobudget;
+        this.isGet = isGet;
+    }
 
     public boolean isGet() {
         return isGet;
@@ -27,15 +36,6 @@ public class Expense {
 
     public void setGet(boolean get) {
         isGet = get;
-    }
-
-    public Expense(int categoryID, Calendar timeCreated, String note, double worth, boolean applytobudget, boolean isGet) {
-        this.categoryID = categoryID;
-        this.timeCreated = timeCreated;
-        this.note = note;
-        this.worth = worth;
-        this.applytobudget = applytobudget;
-        this.isGet = isGet;
     }
 
     public int getId() {
@@ -54,11 +54,11 @@ public class Expense {
         this.categoryID = categoryID;
     }
 
-    public Calendar getTimeCreated() {
+    public Timestamp getTimeCreated() {
         return timeCreated;
     }
 
-    public void setTimeCreated(Calendar timeCreated) {
+    public void setTimeCreated(Timestamp timeCreated) {
         this.timeCreated = timeCreated;
     }
 
@@ -85,6 +85,4 @@ public class Expense {
     public void setApplytobudget(boolean applytobudget) {
         this.applytobudget = applytobudget;
     }
-
-
 }

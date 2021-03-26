@@ -3,9 +3,8 @@ package com.example.testdoan.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
+
 public class User {
-    @PrimaryKey(autoGenerate = true)
     private int id;
     private String name;
     private String sdt;

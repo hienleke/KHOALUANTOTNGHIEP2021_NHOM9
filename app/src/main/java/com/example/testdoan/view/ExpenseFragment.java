@@ -1,10 +1,13 @@
 package com.example.testdoan.view;
 
 import android.content.Intent;
+import android.icu.util.Calendar;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,8 +34,11 @@ import com.google.type.DateTime;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Calendar;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -69,6 +75,7 @@ public class ExpenseFragment extends Fragment {
         adapter.startListening();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,12 +94,8 @@ public class ExpenseFragment extends Fragment {
                 int day = Integer.valueOf(time.split("-")[0]);
                 int month = Integer.valueOf(time.split("-")[1]);
                 int year = Integer.valueOf(time.split("-")[2]);
-                Date begin = new Date(year,month,day);
-
-                SimpleDateFormat sdf = new SimpleDateFormat("yyy-dd-MM-HH.mm.ss");
-               sdf.parse(begin.toString());
-                long timestamp = begin.getTime();
-                query = query.whereGreaterThan("timeCreated", new Timestamp(begin));//.whereLessThan("timeCreated", end);
+                LocalDate localDate = LocalDate.of(year, month, day);
+                query = query.
                 break;
             case "week":
 

@@ -29,14 +29,14 @@
             android:text="@string/money" />
 
         <EditText
+            android:id="@+id/form_expense_amount"
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:layout_weight=".75"
             android:background="@drawable/rouder_edittext"
-            android:padding="7dp"
             android:inputType="numberDecimal"
-             />
+            android:padding="7dp" />
     </LinearLayout>
 
 
@@ -63,7 +63,7 @@
             android:text="@string/category" />
 
         <TextView
-            android:id="@+id/categoryEdittext"
+            android:id="@+id/form_expense_category"
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
@@ -96,7 +96,7 @@
             android:text="@string/time" />
 
         <TextView
-            android:id="@+id/timeEdittext"
+            android:id="@+id/form_expense_time"
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
@@ -126,12 +126,13 @@
             android:text="@string/note" />
 
         <EditText
+            android:id="@+id/form_expense_note"
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:layout_weight=".75"
-            android:padding="7dp"
-            android:background="@drawable/rouder_edittext" />
+            android:background="@drawable/rouder_edittext"
+            android:padding="7dp" />
     </LinearLayout>
 
     <Button

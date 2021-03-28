@@ -2,12 +2,14 @@ package com.example.testdoan.view;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.fragment.app.FragmentManager;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,17 +17,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
+
 import android.widget.Toast;
 import com.example.testdoan.R;
 import com.example.testdoan.externalView.Tools;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.testdoan.model.User;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
+
 
 import  com.example.testdoan.externalView.HorizontalCalendarView;
 import com.google.firebase.firestore.DocumentReference;
@@ -41,15 +43,19 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private ArrayList datesToBeColored;
     Calendar starttime,endtime;
-    public static FirebaseFirestore db ;
+    public static User user;
+    public static FirebaseFirestore db  = FirebaseFirestore.getInstance();
+    private String modeCurrent;
+    private String timeCurrent;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseFirestore.setLoggingEnabled(true);
-        db = FirebaseFirestore.getInstance();
+
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         actionBar = getActionBar();
@@ -84,27 +90,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("first", "Ada");
-        user.put("last", "Lovelace");
-        user.put("born", 1815);
-
-// Add a new document with a generated ID
-        db.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("asdfasdf", "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("asdfas", "Error adding document", e);
-                    }
-                });
-
 
     }
 
@@ -122,21 +107,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
         switch (item.getItemId()) {
             case R.id.optionmenu_bydate:
                 starttime = Calendar.getInstance();
                 starttime.add(Calendar.DATE,-10);
                 endtime = Calendar.getInstance();
                 endtime.add(Calendar.DATE,10);
+                modeCurrent="date";
                 calendarView.setUpCalendar("date",starttime.getTimeInMillis(),
                         endtime.getTimeInMillis(),
                         datesToBeColored,
                         new HorizontalCalendarView.OnCalendarListener() {
                             @Override
                             public void onDateSelected(String date) {
+                                timeCurrent=date;
                                 Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
+                                fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                             }
                         });
                 break;
@@ -145,12 +135,14 @@ public class MainActivity extends AppCompatActivity {
                 starttime.add(Calendar.WEEK_OF_MONTH,-10);
                 endtime = Calendar.getInstance();
                 endtime.add(Calendar.WEEK_OF_MONTH,10);
+                modeCurrent="week";
                 calendarView.setUpCalendar("week",starttime.getTimeInMillis(),
                         endtime.getTimeInMillis(),
                         datesToBeColored,
                         new HorizontalCalendarView.OnCalendarListener() {
                             @Override
                             public void onDateSelected(String date) {
+                                timeCurrent=date;
                                 Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
 
                             }
@@ -160,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 starttime = Calendar.getInstance();
                 starttime.add(Calendar.MONTH,-10);
 
-
+                modeCurrent="month";
                 endtime = Calendar.getInstance();
                 endtime.add(Calendar.MONTH,10);
                 calendarView.setUpCalendar("month",starttime.getTimeInMillis(),
@@ -169,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                         new HorizontalCalendarView.OnCalendarListener() {
                             @Override
                             public void onDateSelected(String date) {
+                                timeCurrent=date;
                                 Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -178,13 +171,16 @@ public class MainActivity extends AppCompatActivity {
                 starttime.add(Calendar.YEAR,-5);
                 endtime = Calendar.getInstance();
                 endtime.add(Calendar.YEAR,5);
+                modeCurrent="year";
                 calendarView.setUpCalendar("year",starttime.getTimeInMillis(),
                         endtime.getTimeInMillis(),
                         datesToBeColored,
                         new HorizontalCalendarView.OnCalendarListener() {
                             @Override
                             public void onDateSelected(String date) {
+                                timeCurrent=date;
                                 Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
+
 
                             }
                         });
@@ -204,16 +200,16 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.menu_expense:
-                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance("asdf","asdfa")).commit();
+                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                     break;
                 case R.id.menu_report:
-                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Report.newInstance()).commit();
+                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Report.newInstance(),"reportFragment").commit();
                     break;
                 case R.id.menu_planning:
-                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Planning.newInstance()).commit();
+                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Planning.newInstance(),"planningFragment").commit();
                     break;
                 case R.id.menu_setting:
-                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Setting.newInstance()).commit();
+                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Setting.newInstance(),"settingFragment").commit();
                     break;
             }
             return true;

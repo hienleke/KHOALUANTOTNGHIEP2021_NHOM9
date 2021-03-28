@@ -11,7 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Testdoan">
-        <activity android:name=".view.Category_Manage"></activity>
+        <activity android:name=".view.Category_Manage"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+
+
+        </activity>
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

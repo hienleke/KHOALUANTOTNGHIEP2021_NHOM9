@@ -1,19 +1,28 @@
 package com.example.testdoan.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.example.testdoan.R;
+import com.example.testdoan.externalView.Iteam_category_adapter;
+import com.example.testdoan.model.Category;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.firestore.Query;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,30 +31,23 @@ import com.google.android.material.tabs.TabLayoutMediator;
  */
 public class category_manage_fragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    ViewPager2 viewPager2;
-    TabLayout tab_layout;
+    private Iteam_category_adapter adapter;
+    private RecyclerView recyclerView;
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     public category_manage_fragment() {
-        // Required empty public constructor
+
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment category_manage_fragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static category_manage_fragment newInstance(String param1, String param2) {
         category_manage_fragment fragment = new category_manage_fragment();
         Bundle args = new Bundle();
@@ -62,15 +64,45 @@ public class category_manage_fragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        Query query = MainActivity.db
+                .collection("users")
+                .document("YanMbTpDzBW2VKVBwDoC")
+                .collection(mParam1=="income"? "category_income" : "category_expense");
+        FirestoreRecyclerOptions<Category> options = new FirestoreRecyclerOptions.Builder<com.example.testdoan.model.Category>()
+                .setQuery(query, com.example.testdoan.model.Category.class)
+                .build();
+        adapter = new Iteam_category_adapter(options,getContext());
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View v = inflater.inflate(R.layout.fragment_category_manage_fragment, container, false);
+        recyclerView = v.findViewById(R.id.recycleview_categoryIteam);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(50));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        // do whatever
+                       String data=  adapter.getItem(position).getName();
+                       Intent t = new Intent();
+                       t.putExtra("data",data );
+                       t.putExtra("expen", Category_Manage.viewPager2.getCurrentItem()==0 ? false : true);
+                        getActivity().setResult(Form_add_expense.requestcodeForcategory, t);
+                        getActivity().finish();
+                    }
 
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
+                    }
+                })
+        );
 
         return v;
     }
@@ -79,5 +111,12 @@ public class category_manage_fragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 }

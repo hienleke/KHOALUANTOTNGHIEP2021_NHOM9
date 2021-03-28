@@ -27,7 +27,10 @@ public class CategoryAdapterViewpager  extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return category_manage_fragment.newInstance("asdfas","ASdfasf");
+        if(position==0)
+        return category_manage_fragment.newInstance("income","ASdfasf");
+        return category_manage_fragment.newInstance("expense","ASdfasf");
+
     }
 
     @Override

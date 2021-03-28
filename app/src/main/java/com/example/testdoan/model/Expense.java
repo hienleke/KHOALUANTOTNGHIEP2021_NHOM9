@@ -1,57 +1,52 @@
 package com.example.testdoan.model;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentId;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Calendar;
 
 public class Expense {
-    private int id;
-
-    private int categoryID;
+    @DocumentId
+    private String id;
+    private String category;
     private Timestamp timeCreated;
     private String note;
-    private double worth;
-    private boolean applytobudget;
-    private boolean isGet;
+    private double amount;
+    private boolean expen;
 
+    public Expense() {
+    }
 
-    public Expense(int id, int categoryID, Timestamp timeCreated, String note, double worth, boolean applytobudget, boolean isGet) {
+    public Expense(String id, String category, Timestamp timeCreated, String note, double amount, boolean expen) {
         this.id = id;
-        this.categoryID = categoryID;
+        this.category = category;
         this.timeCreated = timeCreated;
         this.note = note;
-        this.worth = worth;
-        this.applytobudget = applytobudget;
-        this.isGet = isGet;
+        this.amount = amount;
+        this.expen = expen;
     }
 
-    public boolean isGet() {
-        return isGet;
+    public Expense(String category, Timestamp timeCreated, String note, double amount, boolean expen) {
+        this.category = category;
+        this.timeCreated = timeCreated;
+        this.note = note;
+        this.amount = amount;
+        this.expen = expen;
     }
 
-    public void setGet(boolean get) {
-        isGet = get;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getCategoryID() {
-        return categoryID;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategoryID(int categoryID) {
-        this.categoryID = categoryID;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Timestamp getTimeCreated() {
@@ -70,19 +65,19 @@ public class Expense {
         this.note = note;
     }
 
-    public double getWorth() {
-        return worth;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setWorth(double worth) {
-        this.worth = worth;
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 
-    public boolean isApplytobudget() {
-        return applytobudget;
+    public boolean isExpen() {
+        return expen;
     }
 
-    public void setApplytobudget(boolean applytobudget) {
-        this.applytobudget = applytobudget;
+    public void setExpen(boolean expen) {
+        this.expen = expen;
     }
 }

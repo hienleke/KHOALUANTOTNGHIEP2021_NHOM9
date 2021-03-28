@@ -1,7 +1,6 @@
 package com.example.testdoan.model;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+
 
 
 public class User {

@@ -1,6 +1,7 @@
 package com.example.testdoan.view;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -9,16 +10,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.testdoan.R;
 
 public class ExpenseHolder extends RecyclerView.ViewHolder {
-     TextView time;
-     TextView category;
-     TextView amount;
-     TextView expenseorIncome;
+
+    public TextView time;
+    public ImageView remove;
+     public TextView category;
+     public TextView amount;
+     public TextView expenseorIncome;
 
     public ExpenseHolder(@NonNull View itemView) {
         super(itemView);
         time = itemView.findViewById(R.id.iteam_time);
-        category = itemView.findViewById(R.id.iteam_category);
+        category = itemView.findViewById(R.id.iteam_category_name);
         amount = itemView.findViewById(R.id.iteam_amount);
         expenseorIncome = itemView.findViewById(R.id.iteam_expenseOrincome);
+        remove =itemView.findViewById(R.id.iteam_delete_button);
     }
 }

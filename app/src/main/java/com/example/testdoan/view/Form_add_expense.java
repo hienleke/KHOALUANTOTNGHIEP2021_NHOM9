@@ -5,66 +5,60 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import android.os.Debug;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.testdoan.R;
+import com.example.testdoan.model.Expense;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.SetOptions;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Form_add_expense#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class Form_add_expense extends BottomSheetDialogFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+    private static Bundle data = null;
     private static final String ARG_PARAM2 = "param2";
     public static final int requestcodeForcategory = 1;
 
-    // TODO: Rename and change types of parameters
+    private String UserID = "YanMbTpDzBW2VKVBwDoC";
     private String mParam1;
-    private String mParam2;
     private TextView editText_time;
     private TextView editText_category;
+    private boolean type;
 
     public Form_add_expense() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Form_add_expense.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Form_add_expense newInstance(String param1, String param2) {
+
+    public static Form_add_expense newInstance(Bundle bundle) {
         Form_add_expense fragment = new Form_add_expense();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putBundle("expense", bundle);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,8 +67,7 @@ public class Form_add_expense extends BottomSheetDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            data = getArguments().getBundle("expense");
         }
     }
 
@@ -82,7 +75,7 @@ public class Form_add_expense extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_form_add_expense, container, false);
-        editText_category=v.findViewById(R.id.categoryEdittext);
+        editText_category=v.findViewById(R.id.form_expense_category);
         editText_category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +85,7 @@ public class Form_add_expense extends BottomSheetDialogFragment {
             }
         });
 
-        editText_time = v.findViewById(R.id.timeEdittext);
+        editText_time = v.findViewById(R.id.form_expense_time);
         editText_time.setText( new SimpleDateFormat("EEE, dd/MMM/yyyy").format(Calendar.getInstance().getTime())   );
         editText_time.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,23 +111,96 @@ public class Form_add_expense extends BottomSheetDialogFragment {
                 datePickerDialog.show();
             }
         });
+        TextView categoryTextview =  (TextView)v.findViewById(R.id.form_expense_category);
+        EditText amountTextview =  v.findViewById(R.id.form_expense_amount);
+        TextView timeTextview =  (TextView)v.findViewById(R.id.form_expense_time);
+        EditText NoteTextview =  v.findViewById(R.id.form_expense_note);
+        Button save = v.findViewById(R.id.form_expense_save);
+        if(data!=null)
+        {
+            Bundle b = getArguments().getBundle("expense");
+            mParam1=b.getString("id");
+            categoryTextview.setText(b.getString("category"));
+            amountTextview.setText(b.getString("amount"));
+            SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MMM/yyyy");
+            timeTextview.setText(format.format(Date.parse(b.getString("time"))));
+            NoteTextview.setText(b.getString("note"));
 
+        }
+
+
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String Category =categoryTextview.getText().toString();
+                double amount = Double.valueOf(amountTextview.getText().toString());
+                String time =timeTextview.getText().toString();
+                String note =NoteTextview.getText().toString();
+                SimpleDateFormat formatter =   new SimpleDateFormat("EEE, dd/MMM/yyyy");
+                Date date = new Date();
+                try {
+                    date = formatter.parse(time);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    Log.d("loi ngay", "loi ngay");
+                }
+
+                Timestamp timestamp = new Timestamp( date );
+
+                Map<String, Object> data = new HashMap<>();
+
+                data.put("amount", amount);
+                data.put("category", Category);
+                data.put("expen", type);
+                data.put("note", note);
+                data.put("timeCreated", timestamp);
+
+               DocumentReference dff =  MainActivity.db
+                        .collection("users")
+                        .document(UserID)
+                        .collection("expense").document();
+               if(getArguments().getBundle("expense")!=null)
+               {
+                   dff =  MainActivity.db
+                           .collection("users")
+                           .document(UserID)
+                           .collection("expense").document(mParam1);
+               }
+
+               dff.set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
+                        dismiss();
+                    }
+
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "fail", Toast.LENGTH_SHORT).show();
+                        dismiss();
+                    }
+                });
+            }
+        });
         return v;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==Form_add_expense.requestcodeForcategory)
+        if(requestCode==Form_add_expense.requestcodeForcategory && data !=null)
         {
-            TextView v = getView().findViewById(R.id.categoryEdittext);
-
-            v.setText("xxxx");
+            TextView v = getView().findViewById(R.id.form_expense_category);
+            v.setText(data.getStringExtra("data"));
+            type = data.getBooleanExtra("expen", true);
             // v.setText(data.getStringExtra("category"));
         }
     }
-
-
 
 
 }

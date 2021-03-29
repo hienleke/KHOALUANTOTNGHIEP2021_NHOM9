@@ -5,11 +5,13 @@ import android.os.Build;
 import android.os.Bundle;
 
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +20,23 @@ import android.widget.Button;
 
 import com.example.testdoan.R;
 import com.example.testdoan.externalView.Iteam_expense_adapter;
+import com.example.testdoan.model.Expense;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.firestore.Query;;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class ExpenseFragment extends Fragment {
@@ -74,7 +83,6 @@ public class ExpenseFragment extends Fragment {
                 .document("YanMbTpDzBW2VKVBwDoC")
                 .collection("expense");
 
-        // nhin cai gi
 
         switch (mode) {
             case "date":
@@ -132,13 +140,13 @@ public class ExpenseFragment extends Fragment {
                 break;
         }
 
-        // roi sao
 
         FirestoreRecyclerOptions<com.example.testdoan.model.Expense> options = new FirestoreRecyclerOptions.Builder<com.example.testdoan.model.Expense>()
                 .setQuery(query, com.example.testdoan.model.Expense.class)
                 .build();
 
         adapter = new Iteam_expense_adapter(options,getContext());
+
 
     }
 

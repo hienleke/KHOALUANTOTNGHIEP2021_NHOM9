@@ -333,16 +333,31 @@
     <color name="gray">#f4f2ee</color>
     <color name="light_blue">#b2ccde</color>
     <color name="blue">#6dbef4</color>
+    <color name="bright_pink">#FF007F</color>
+    <color name="red">#FF0000</color>
+    <color name="orange">#FF7F00</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="chartreuse">#7FFF00</color>
+    <color name="green">#00FF00</color>
+    <color name="spring_green">#00FF7F</color>
+    <color name="cyan">#00FFFF</color>
+    <color name="azure">#007FFF</color>
+    <color name="violet">#7F00FF</color>
+    <color name="magenta">#FF00FF</color>
 
 
     <!--for random color generator -->
     <array name="mdcolor_random">
-        <item type="color">#e91e63</item>
-        <item type="color">#9c27b0</item>
-        <item type="color">#673ab7</item>
-        <item type="color">#E53935</item>
-        <item type="color">#5677fc</item>
-        <item type="color">#689F38</item>
+        <item>@color/orange</item>
+        <item type="color">#259b24</item>
+        <item>@color/blue</item>
+        <item>@color/chartreuse</item>
+        <item type="color">#607d8b</item>
+        <item>@color/spring_green</item>
+        <item>@color/cyan</item>
+        <item>@color/azure</item>
+        <item>@color/violet</item>
+        <item>@color/magenta</item>
         <item type="color">#03a9f4</item>
         <item type="color">#00bcd4</item>
         <item type="color">#009688</item>
@@ -351,6 +366,16 @@
         <item type="color">#795548</item>
         <item type="color">#607d8b</item>
         <item type="color">#ff9800</item>
+        <item type="color">#e91e63</item>
+        <item type="color">#9c27b0</item>
+        <item type="color">#673ab7</item>
+        <item type="color">#E53935</item>
+        <item type="color">#5677fc</item>
+        <item type="color">#689F38</item>
+
+
+
+
     </array>
 
 

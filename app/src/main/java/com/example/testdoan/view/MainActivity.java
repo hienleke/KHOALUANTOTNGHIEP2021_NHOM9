@@ -47,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseFirestore db  = FirebaseFirestore.getInstance();
     private String modeCurrent = "date";
     private String timeCurrent;
+    private boolean CurrentTabisExpense =true;
+    private boolean CurrentTabisReport =false;
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -91,8 +94,10 @@ public class MainActivity extends AppCompatActivity {
                         modeCurrent="date";
                         timeCurrent=date;
                         Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
+                       if(CurrentTabisExpense)
                         fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
-
+                       if(CurrentTabisReport)
+                           fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                     }
                 });
 
@@ -128,7 +133,10 @@ public class MainActivity extends AppCompatActivity {
                 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                 String strDate = formatter.format(new Date());
                 timeCurrent=strDate;
+                if(CurrentTabisExpense)
                 fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
+                if(CurrentTabisReport)
+                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(modeCurrent,timeCurrent),"ReportFragment").commit();
                 calendarView.setUpCalendar("date",starttime.getTimeInMillis(),
                         endtime.getTimeInMillis(),
                         datesToBeColored,
@@ -137,7 +145,10 @@ public class MainActivity extends AppCompatActivity {
                             public void onDateSelected(String date) {
                                 timeCurrent=date;
                                 Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
-                                fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
+                                if(CurrentTabisExpense)
+                                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
+                                if(CurrentTabisReport)
+                                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(modeCurrent,timeCurrent),"ReportFragment").commit();
                             }
                         });
                 break;
@@ -155,7 +166,10 @@ public class MainActivity extends AppCompatActivity {
                             public void onDateSelected(String date) {
                                 timeCurrent=date;
                                 Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
-                                fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
+                                if(CurrentTabisExpense)
+                                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
+                                if(CurrentTabisReport)
+                                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(modeCurrent,timeCurrent),"ReportFragment").commit();
                             }
                         });
                 break;
@@ -175,7 +189,10 @@ public class MainActivity extends AppCompatActivity {
                             public void onDateSelected(String date) {
                                 timeCurrent=date;
                                 Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
-                                fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
+                                if(CurrentTabisExpense)
+                                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
+                                if(CurrentTabisReport)
+                                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(modeCurrent,timeCurrent),"ReportFragment").commit();
                             }
                         });
                 break;
@@ -194,7 +211,10 @@ public class MainActivity extends AppCompatActivity {
                             public void onDateSelected(String date) {
                                 timeCurrent=date;
                                 Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
-                                fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
+                                if(CurrentTabisExpense)
+                                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
+                                if(CurrentTabisReport)
+                                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(modeCurrent,timeCurrent),"ReportFragment").commit();
 
                             }
                         });
@@ -214,15 +234,23 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.menu_expense:
+                    CurrentTabisExpense=true;
+                    CurrentTabisReport=false;
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                     break;
                 case R.id.menu_report:
-                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(),"reportFragment").commit();
+                    CurrentTabisExpense=false;
+                    CurrentTabisReport=true;
+                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(modeCurrent,timeCurrent),"reportFragment").commit();
                     break;
                 case R.id.menu_planning:
+                    CurrentTabisExpense=false;
+                    CurrentTabisReport=false;
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Planning.newInstance(),"planningFragment").commit();
                     break;
                 case R.id.menu_setting:
+                    CurrentTabisExpense=false;
+                    CurrentTabisReport=false;
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Setting.newInstance(),"settingFragment").commit();
                     break;
             }

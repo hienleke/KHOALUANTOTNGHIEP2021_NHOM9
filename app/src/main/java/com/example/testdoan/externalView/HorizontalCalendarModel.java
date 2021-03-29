@@ -3,8 +3,7 @@ package com.example.testdoan.externalView;
 public class HorizontalCalendarModel {
     long timeinmilli;
     int status=0; //0->no color, 1->green, 2-> yellow
-     String data;
-
+    String data;
     public HorizontalCalendarModel(String data) {
         this.data = data;
     }

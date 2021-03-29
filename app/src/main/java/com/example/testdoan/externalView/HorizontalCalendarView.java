@@ -123,9 +123,9 @@ public class HorizontalCalendarView extends LinearLayout {
                     boolean kq =false;
                     c1.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
                     long vcl =Calendar.getInstance().getTimeInMillis();
-                    String tam = c1.get(Calendar.DATE)+"/"+(c1.get(Calendar.MONTH)+1);
+                    String tam = c1.get(Calendar.DATE)+"/"+(c1.get(Calendar.MONTH)+1+"/"+(c1.get(Calendar.YEAR)));
                     c1.add(Calendar.DATE, 6);
-                    tam+="-" + c1.get(Calendar.DATE)+"/"+(c1.get(Calendar.MONTH)+1);
+                    tam+="-" + c1.get(Calendar.DATE)+"/"+(c1.get(Calendar.MONTH)+1+"/"+(c1.get(Calendar.YEAR)));
                     kq = c1.getTimeInMillis() > vcl  ? true :  false;
                     c1.add(Calendar.DATE, -6);
                     HorizontalCalendarModel model1 = new HorizontalCalendarModel(tam);

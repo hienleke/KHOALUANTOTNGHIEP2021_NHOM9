@@ -81,7 +81,6 @@ class HorizontalCalendarAdapterWeek extends RecyclerView.Adapter<HorizontalCalen
             @Override
             public void onClick(View view) {
                 onCalendarListener.onDateSelected(model.getData().toString());
-
                 for (HorizontalCalendarModel m :list
                 ) {
                     m.setStatus(0);

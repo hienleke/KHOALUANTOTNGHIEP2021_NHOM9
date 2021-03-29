@@ -1,12 +1,10 @@
 package com.example.testdoan.view;
 
-import android.content.Intent;
-import android.icu.util.Calendar;
+
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,42 +14,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
 
 import com.example.testdoan.R;
 import com.example.testdoan.externalView.Iteam_expense_adapter;
-import com.example.testdoan.model.Expense;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.type.DateTime;
-
-import java.text.SimpleDateFormat;
+import com.google.firebase.firestore.Query;;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
-import java.util.List;
-
 
 
 public class ExpenseFragment extends Fragment {
 
     private static final String ARG_mode = "param1";
     private static final String ARG_time = "param2";
-
     private String mode;
     private String time;
-    private Button openFormAddDebitorRepay;
+
     private Button openFormAddExpenseIncome;
     private RecyclerView recyclerView;
     private FirestoreRecyclerAdapter adapter ;
@@ -89,24 +74,65 @@ public class ExpenseFragment extends Fragment {
                 .document("YanMbTpDzBW2VKVBwDoC")
                 .collection("expense");
 
+        // nhin cai gi
+
         switch (mode) {
             case "date":
                 int day = Integer.valueOf(time.split("-")[0]);
                 int month = Integer.valueOf(time.split("-")[1]);
                 int year = Integer.valueOf(time.split("-")[2]);
-                LocalDate localDate = LocalDate.of(year, month, day);
-                query = query.
+                LocalDate localDate1 = LocalDate.of(year, month,day);
+                ZoneId zoneid = ZoneId.systemDefault();
+                Instant instant = Instant.now();
+                ZoneOffset currentOffsetForMyZone = zoneid.getRules().getOffset(instant);
+                Date begin =Date.from(localDate1.atStartOfDay(zoneid).toInstant());
+                Date end =Date.from(localDate1.atTime(23,59,59).toInstant(currentOffsetForMyZone));
+                query = query.whereGreaterThanOrEqualTo("timeCreated", begin).whereLessThanOrEqualTo("timeCreated",end);
                 break;
             case "week":
-
+                String time2begin = time.split("-")[0] ;
+                String time2end = time.split("-")[1];
+                int day2begin = Integer.valueOf(time2begin.split("/")[0]);
+                int month2begin = Integer.valueOf(time2begin.split("/")[1]);
+                int year2begin = Integer.valueOf(time2begin.split("/")[2]);
+                int day2end = Integer.valueOf(time2end.split("/")[0]);
+                int month2end = Integer.valueOf(time2end.split("/")[1]);
+                int year2end = Integer.valueOf(time2end.split("/")[2]);
+                LocalDate localDate2begin = LocalDate.of(year2begin, month2begin,day2begin);
+                LocalDate localDate2end = LocalDate.of(year2end, month2end,day2end);
+                ZoneId zoneid2 = ZoneId.systemDefault();
+                Instant instant2 = Instant.now();
+                ZoneOffset currentOffsetForMyZone2 = zoneid2.getRules().getOffset(instant2);
+                Date begin2 =Date.from(localDate2begin.atStartOfDay(zoneid2).toInstant());
+                Date end2 =Date.from(localDate2end.atTime(23,59,59).toInstant(currentOffsetForMyZone2));
+                query = query.whereGreaterThanOrEqualTo("timeCreated", begin2).whereLessThanOrEqualTo("timeCreated",end2);
                 break;
             case "month":
-
+                 month2begin = Integer.valueOf(time.split("/")[0]);
+                 year2begin = Integer.valueOf(time.split("/")[1]);
+                 localDate2begin = LocalDate.of(year2begin, month2begin,1);
+                 localDate2end = LocalDate.of(year2begin, month2begin, 1).with(TemporalAdjusters.lastDayOfMonth());
+                zoneid2 = ZoneId.systemDefault();
+                 instant2 = Instant.now();
+                currentOffsetForMyZone2 = zoneid2.getRules().getOffset(instant2);
+                 begin2 =Date.from(localDate2begin.atStartOfDay(zoneid2).toInstant());
+                 end2 =Date.from(localDate2end.atTime(23,59,59).toInstant(currentOffsetForMyZone2));
+                query = query.whereGreaterThanOrEqualTo("timeCreated", begin2).whereLessThanOrEqualTo("timeCreated",end2);
                 break;
             case "year":
-
+                year2begin = Integer.valueOf(time);
+                localDate2begin = LocalDate.of(year2begin, 1,1);
+                localDate2end = LocalDate.of(year2begin, 12, 31);
+                zoneid2 = ZoneId.systemDefault();
+                instant2 = Instant.now();
+                currentOffsetForMyZone2 = zoneid2.getRules().getOffset(instant2);
+                begin2 =Date.from(localDate2begin.atStartOfDay(zoneid2).toInstant());
+                end2 =Date.from(localDate2end.atTime(23,59,59).toInstant(currentOffsetForMyZone2));
+                query = query.whereGreaterThanOrEqualTo("timeCreated", begin2).whereLessThanOrEqualTo("timeCreated",end2);
                 break;
         }
+
+        // roi sao
 
         FirestoreRecyclerOptions<com.example.testdoan.model.Expense> options = new FirestoreRecyclerOptions.Builder<com.example.testdoan.model.Expense>()
                 .setQuery(query, com.example.testdoan.model.Expense.class)
@@ -121,7 +147,6 @@ public class ExpenseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_expense, container, false);
-        openFormAddDebitorRepay= v.findViewById(R.id.addIncome);
         openFormAddExpenseIncome =v.findViewById(R.id.addExpense);
         recyclerView=v.findViewById(R.id.iteam_debit_expense_recycleview);
 

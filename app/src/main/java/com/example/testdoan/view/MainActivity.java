@@ -11,7 +11,6 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,13 +23,14 @@ import com.example.testdoan.externalView.Tools;
 import com.example.testdoan.model.User;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 
 import  com.example.testdoan.externalView.HorizontalCalendarView;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     Calendar starttime,endtime;
     public static User user;
     public static FirebaseFirestore db  = FirebaseFirestore.getInstance();
-    private String modeCurrent;
+    private String modeCurrent = "date";
     private String timeCurrent;
 
 
@@ -55,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseFirestore.setLoggingEnabled(true);
+        Date date1 = new Date();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        String strDate = formatter.format(date1);
+        timeCurrent=strDate;
 
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -62,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         container = findViewById(R.id.containerFramelayout);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.containerFramelayout, ExpenseFragment.newInstance("asdfsa","asdfas")).commit();
+        fragmentManager.beginTransaction().add(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent)).commit();
         handleNavigation();
 
        calendarView = findViewById(R.id.calendar);
@@ -83,8 +88,10 @@ public class MainActivity extends AppCompatActivity {
                 new HorizontalCalendarView.OnCalendarListener() {
                     @Override
                     public void onDateSelected(String date) {
-                        //datesToBeColored.add(date);
+                        modeCurrent="date";
+                        timeCurrent=date;
                         Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
+                        fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
 
                     }
                 });
@@ -118,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
                 endtime = Calendar.getInstance();
                 endtime.add(Calendar.DATE,10);
                 modeCurrent="date";
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                String strDate = formatter.format(new Date());
+                timeCurrent=strDate;
+                fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                 calendarView.setUpCalendar("date",starttime.getTimeInMillis(),
                         endtime.getTimeInMillis(),
                         datesToBeColored,
@@ -144,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onDateSelected(String date) {
                                 timeCurrent=date;
                                 Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
-
+                                fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                             }
                         });
                 break;
@@ -155,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 modeCurrent="month";
                 endtime = Calendar.getInstance();
                 endtime.add(Calendar.MONTH,10);
+               // fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                 calendarView.setUpCalendar("month",starttime.getTimeInMillis(),
                         endtime.getTimeInMillis(),
                         datesToBeColored,
@@ -163,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onDateSelected(String date) {
                                 timeCurrent=date;
                                 Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
+                                fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                             }
                         });
                 break;
@@ -172,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
                 endtime = Calendar.getInstance();
                 endtime.add(Calendar.YEAR,5);
                 modeCurrent="year";
+              //  fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                 calendarView.setUpCalendar("year",starttime.getTimeInMillis(),
                         endtime.getTimeInMillis(),
                         datesToBeColored,
@@ -180,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onDateSelected(String date) {
                                 timeCurrent=date;
                                 Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
-
+                                fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
 
                             }
                         });
@@ -203,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                     break;
                 case R.id.menu_report:
-                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Report.newInstance(),"reportFragment").commit();
+                    fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(),"reportFragment").commit();
                     break;
                 case R.id.menu_planning:
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Planning.newInstance(),"planningFragment").commit();

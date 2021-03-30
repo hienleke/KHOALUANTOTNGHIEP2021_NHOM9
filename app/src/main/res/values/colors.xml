@@ -348,16 +348,21 @@
 
     <!--for random color generator -->
     <array name="mdcolor_random">
-        <item>@color/orange</item>
-        <item type="color">#259b24</item>
+        <item>#72EC6E</item>
+        <item>@color/amber_A200</item>
+        <item type="color">#F44336</item>
         <item>@color/blue</item>
         <item>@color/chartreuse</item>
+        <item>@color/lime_500</item>
         <item type="color">#607d8b</item>
         <item>@color/spring_green</item>
         <item>@color/cyan</item>
         <item>@color/azure</item>
+        <item type="color">#5677fc</item>
+         <item type="color">#689F38</item>
         <item>@color/violet</item>
-        <item>@color/magenta</item>
+        <item>@color/orange</item>
+        <item type="color">#259b24</item>
         <item type="color">#03a9f4</item>
         <item type="color">#00bcd4</item>
         <item type="color">#009688</item>
@@ -366,12 +371,11 @@
         <item type="color">#795548</item>
         <item type="color">#607d8b</item>
         <item type="color">#ff9800</item>
-        <item type="color">#e91e63</item>
+
         <item type="color">#9c27b0</item>
-        <item type="color">#673ab7</item>
-        <item type="color">#E53935</item>
-        <item type="color">#5677fc</item>
-        <item type="color">#689F38</item>
+
+        <item>@color/magenta</item>
+
 
 
 

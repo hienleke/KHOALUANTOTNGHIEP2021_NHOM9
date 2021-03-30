@@ -22,13 +22,16 @@ import com.example.testdoan.viewmodel.ReportViewModel;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -123,21 +126,7 @@ public class ReportFragment extends Fragment {
                 query = query.whereGreaterThanOrEqualTo("timeCreated", begin).whereLessThanOrEqualTo("timeCreated", end);
                 getdataforChart(query);
 
-                DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(begin);
-                calendar.setFirstDayOfWeek(Calendar.MONDAY);
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-
-                String[] days = new String[7];
-                for (int i = 0; i < 7; i++)
-                {
-                    days[i] = format.format(calendar.getTime());
-                    calendar.add(Calendar.DAY_OF_MONTH, 1);
-                }
-
-
-                createLinechart();
+                createLinechart("date",begin,year, month,day);
                 break;
             case "week":
                 String time2begin = time.split("-")[0];
@@ -321,16 +310,118 @@ public class ReportFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(ReportViewModel.class);
     }
 
-    private void createLinechart()
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createLinechart(String mode, Date time, int year, int month, int day)
     {
         LineData lineData;
         List<Entry> entryList = new ArrayList<>();
+        List<Entry> entryList2 = new ArrayList<>();
+        switch (mode) {
+            case "date":
+                lineChart.getDescription().setText("Day in week");
+                ZoneId zoneid = ZoneId.systemDefault();
+                Instant instant = Instant.now();
+                ZoneOffset currentOffsetForMyZone = zoneid.getRules().getOffset(instant);
+
+                DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(time);
+                calendar.setFirstDayOfWeek(Calendar.MONDAY);
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                String[] days = new String[7];
+                boolean vcl =false;
+
+                for (int i = 0; i < 7 && vcl ; i++)
+                {
+                   vcl =false;
+                    days[i] = format.format(calendar.getTime());
+                    calendar.add(Calendar.DAY_OF_MONTH, 1);
+                    LocalDate localDate1 = LocalDate.of(year, month, day);
+                    Date begin = Date.from(localDate1.atStartOfDay(zoneid).toInstant());
+                    Date end = Date.from(localDate1.atTime(23, 59, 59).toInstant(currentOffsetForMyZone));
+                    Query query = MainActivity.db
+                            .collection("users")
+                            .document("YanMbTpDzBW2VKVBwDoC")
+                            .collection("expense");
+                    query.whereGreaterThanOrEqualTo("timeCreated", begin)
+                            .whereLessThanOrEqualTo("timeCreated", end).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                            if (task.isSuccessful()) {
+                                double expenseSum =0;
+                                double incomesum =0 ;
+                                for (QueryDocumentSnapshot doc : task.getResult()) {
+                                    Expense iteam = new Expense(doc.getId(), doc.getString("category"), doc.getTimestamp("timeCreated"), doc.getString("note"), doc.getDouble("amount"), doc.getBoolean("expen"));
+                                    if (iteam.isExpen()) {
+                                        expenseSum += iteam.getAmount();
+                                    } else {
+                                        incomesum += iteam.getAmount();
+                                    }
+                                }
+                                entryList.add(new Entry(i+1,expenseSum));
+                                entryList2.add(new Entry(i+1,incomesum));
+                            } else {
+                                Log.d("sai r", "Error getting documents: ", task.getException());
+                            }
+
+                            vcl=true;
+                        }
+                    });
+                    lineChart.getXAxis().setLabelCount(7);
+                    lineChart.getXAxis().setValueFormatter(new ValueFormatter() {
+                        @Override
+                        public String getFormattedValue(float value) {
+                            switch ((int) value)
+                            {
+                                case 1:
+                                    return getString(R.string.Monday);
+                                case 2:
+                                    return getString(R.string.Tuesday);
+                                case 3:
+                                    return getString(R.string.Wednesday);
+                                case 4:
+                                    return getString(R.string.Thursday);
+                                case 5:
+                                    return getString(R.string.Friday);
+                                case 6:
+                                    return getString(R.string.Saturday);
+                                case 7:
+                                    return getString(R.string.Sunday);
+
+
+                                default: return "";
+                            }
+                        }
+                    });
+
+                }
+                break;
+            case "week":
+                lineChart.getDescription().setText("Week in month");
+                break;
+            case "month":
+
+                lineChart.getDescription().setText("Month in year");
+                break;
+            case "year":
+
+                lineChart.getDescription().setText("Year");
+                break;
+
+            default:
+                return;
+
+
+        }
+
+
         entryList.add(new Entry(1,20));
         entryList.add(new Entry(2,10));
         entryList.add(new Entry(3,31));
         entryList.add(new Entry(4,14));
 
-        List<Entry> entryList2 = new ArrayList<>();
+
         entryList2.add(new Entry(1,3));
         entryList2.add(new Entry(2,5));
         entryList2.add(new Entry(3,8));
@@ -359,16 +450,19 @@ public class ReportFragment extends Fragment {
 
         lineChart.setData(lineData);
         lineChart.animateX(500);
-        lineChart.getDescription().setText("Day in week");
         lineChart.setDrawGridBackground(false);
         lineChart.setClickable(true);
 
+        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.getXAxis().setDrawGridLines(false);
 
-        lineChart.setDrawGridBackground(false);
-        lineChart.getAxisLeft().setDrawAxisLine(true);
-        lineChart.getAxisRight().setDrawAxisLine(true);
+
+
         lineChart.invalidate();
-        lineChart.setDrawGridBackground(false);
+
     }
+
+
+
 
 }

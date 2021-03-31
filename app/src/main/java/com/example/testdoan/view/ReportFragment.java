@@ -172,6 +172,7 @@ public class ReportFragment extends Fragment {
                 end2 = Date.from(localDate2end.atTime(23, 59, 59).toInstant(currentOffsetForMyZone2));
                 query = query.whereGreaterThanOrEqualTo("timeCreated", begin2).whereLessThanOrEqualTo("timeCreated", end2);
                 getdataforChart(query);
+                createLinechart("year", begin2, year2begin, 1, 1);
                 break;
         }
         return v;
@@ -550,21 +551,18 @@ public class ReportFragment extends Fragment {
 
                 break;
             case "year":
-
                 barChart.getDescription().setText("Month in year");
-                instant = Instant.now();
-                zoneid = ZoneId.systemDefault();
-                currentOffsetForMyZone = zoneid.getRules().getOffset(instant);
-                year = Integer.valueOf(time.getYear());
-              LocalDate  beginahihi = LocalDate.of(year, 1, 1);
-                LocalDate endahihi = LocalDate.of(year, 12, 31);
-                zoneid = ZoneId.systemDefault();
-                instant = Instant.now();
-                currentOffsetForMyZone = zoneid.getRules().getOffset(instant);
-                begin = Date.from(beginahihi.atStartOfDay(zoneid).toInstant());
-                end = Date.from(beginahihi.atTime(23, 59, 59).toInstant(currentOffsetForMyZone));
-                query = query.whereGreaterThanOrEqualTo("timeCreated", begin).whereLessThanOrEqualTo("timeCreated", end);
-
+                int year2begin = Integer.valueOf(year);
+                LocalDate localDate2begin = LocalDate.of(year2begin, 1, 1);
+                LocalDate localDate2end = LocalDate.of(year2begin, 12, 31);
+                ZoneId zoneid2 = ZoneId.systemDefault();
+                Instant instant2 = Instant.now();
+                ZoneOffset currentOffsetForMyZone2 = zoneid2.getRules().getOffset(instant2);
+                Date begin2 = Date.from(localDate2begin.atStartOfDay(zoneid2).toInstant());
+                Date end2 = Date.from(localDate2end.atTime(23, 59, 59).toInstant(currentOffsetForMyZone2));
+                query = query.whereGreaterThanOrEqualTo("timeCreated", begin2).whereLessThanOrEqualTo("timeCreated", end2);
+        
+             
                 expensesTemp = new ArrayList<>();
                 incomesTemp = new ArrayList<>();
                 query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -587,7 +585,7 @@ public class ReportFragment extends Fragment {
                         HashMap<Integer,Double> mapExpense = new HashMap<>();
                         HashMap<Integer,Double> mapIncome = new HashMap<>();
                         for (Expense e : expensesTemp) {
-                            int day = e.getTimeCreated().toDate().getDate();
+                            int day = e.getTimeCreated().toDate().getMonth()+1;
                             if (mapExpense.containsKey(day)) {
                                 mapExpense.put(day, (mapExpense.get(day) + e.getAmount()));
                             } else
@@ -595,7 +593,7 @@ public class ReportFragment extends Fragment {
                         }
 
                         for (Expense e : incomesTemp) {
-                            int day = e.getTimeCreated().toDate().getDate();
+                            int day = e.getTimeCreated().toDate().getMonth()+1;
                             if (mapIncome.containsKey(day)) {
                                 mapIncome.put(day, (mapIncome.get(day) + e.getAmount()));
                             } else
@@ -625,19 +623,12 @@ public class ReportFragment extends Fragment {
                         {
                             temptemp.add(String.valueOf(i));
                         }
-
                         String[] xValues = new String[temptemp.size()];
                         xValues = temptemp.toArray(xValues);
-
-
                         createBarchart(xValues,   chuanhoa(barEntriesIncome,limit),   chuanhoa(barEntriesExpense,limit), limit);
 
                     }
                 });
-
-
-
-
                 break;
             default:
                 return;

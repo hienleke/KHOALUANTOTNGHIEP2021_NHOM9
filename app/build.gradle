@@ -40,7 +40,6 @@ android {
 
 dependencies {
 
-
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'

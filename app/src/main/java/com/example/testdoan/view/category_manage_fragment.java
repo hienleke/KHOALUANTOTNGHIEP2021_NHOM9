@@ -35,6 +35,7 @@ public class category_manage_fragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private Iteam_category_adapter adapter;
     private RecyclerView recyclerView;
+    private String USERID;
 
     private String mParam1;
     private String mParam2;
@@ -46,6 +47,7 @@ public class category_manage_fragment extends Fragment {
     public void onStart() {
         super.onStart();
         adapter.startListening();
+        USERID = Category_Manage.user.getId();
     }
 
     public static category_manage_fragment newInstance(String param1, String param2) {
@@ -67,7 +69,7 @@ public class category_manage_fragment extends Fragment {
 
         Query query = MainActivity.db
                 .collection("users")
-                .document("YanMbTpDzBW2VKVBwDoC")
+                .document(USERID)
                 .collection(mParam1=="income"? "category_income" : "category_expense");
         FirestoreRecyclerOptions<Category> options = new FirestoreRecyclerOptions.Builder<com.example.testdoan.model.Category>()
                 .setQuery(query, com.example.testdoan.model.Category.class)

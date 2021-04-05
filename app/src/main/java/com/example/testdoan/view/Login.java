@@ -12,5 +12,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getSupportActionBar().hide();
+        getSupportFragmentManager().beginTransaction().add(R.id.login_container,LoginFragment.newInstance("sfda","Sdfas")).commit();
     }
 }

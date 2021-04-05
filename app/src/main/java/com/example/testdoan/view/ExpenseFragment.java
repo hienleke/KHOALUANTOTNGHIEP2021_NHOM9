@@ -45,13 +45,22 @@ public class ExpenseFragment extends Fragment {
     private static final String ARG_time = "param2";
     private String mode;
     private String time;
+    private String USERID;
+
+    public String getUSERID() {
+        return USERID;
+    }
+
+    public void setUSERID(String USERID) {
+        this.USERID = USERID;
+    }
 
     private Button openFormAddExpenseIncome;
     private RecyclerView recyclerView;
     private FirestoreRecyclerAdapter adapter ;
 
     public ExpenseFragment() {
-
+        USERID=MainActivity.user.getId();
     }
 
     public static ExpenseFragment newInstance(String mode, String time) {
@@ -60,7 +69,9 @@ public class ExpenseFragment extends Fragment {
         args.putString(ARG_mode, mode);
         args.putString(ARG_time, time);
         fragment.setArguments(args);
+        
         return fragment;
+        
     }
 
     @Override
@@ -78,9 +89,10 @@ public class ExpenseFragment extends Fragment {
             time = getArguments().getString(ARG_time);
         }
 
+
         Query query = MainActivity.db
                 .collection("users")
-                .document("YanMbTpDzBW2VKVBwDoC")
+                .document(USERID)
                 .collection("expense");
 
 

@@ -20,6 +20,7 @@ import com.example.testdoan.R;
 import com.example.testdoan.externalView.Iteam_category_adapter;
 import com.example.testdoan.model.Category;
 import com.example.testdoan.model.Expense;
+import com.example.testdoan.model.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -30,6 +31,7 @@ import com.google.firebase.firestore.Query;
 public class Category_Manage extends AppCompatActivity {
 
     public static ViewPager2 viewPager2;
+    public static User user;
     private CategoryAdapterViewpager adapterViewpager;
     private Button Openaddform;
 
@@ -38,12 +40,14 @@ public class Category_Manage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category__manage);
-
+        user = new User();
         Toolbar toolbar = (Toolbar) findViewById(R.id.awesome_toolbar);
         setSupportActionBar(toolbar);
         FirebaseFirestore.setLoggingEnabled(true);
         Openaddform = findViewById(R.id.openAddform);
-
+        Intent t = getIntent();
+         String ididid = t.getStringExtra("idcuauser");
+        user.setId(ididid);
         Openaddform.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

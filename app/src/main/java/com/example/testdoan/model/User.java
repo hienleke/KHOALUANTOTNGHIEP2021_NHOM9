@@ -1,10 +1,11 @@
 package com.example.testdoan.model;
 
 
-
+import com.google.firebase.firestore.DocumentId;
 
 public class User {
-    private int id;
+    @DocumentId
+    private String id;
     private String name;
     private String sdt;
     private String email;
@@ -17,14 +18,7 @@ public class User {
         this.pass = pass;
     }
 
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public User() {
     }
 
     public String getName() {
@@ -57,5 +51,14 @@ public class User {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

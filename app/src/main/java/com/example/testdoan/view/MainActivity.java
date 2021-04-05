@@ -60,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
         FirebaseFirestore.setLoggingEnabled(true);
         Date date1 = new Date();
 
+        Intent userdata = getIntent();
+        user = new User();
+        user.setId(userdata.getStringExtra("userId"));
+        user.setEmail(userdata.getStringExtra("userEmail"));
+        user.setName(userdata.getStringExtra("userName"));
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String strDate = formatter.format(date1);
         timeCurrent=strDate;
@@ -253,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
                     CurrentTabisReport=false;
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Setting.newInstance(),"settingFragment").commit();
                     break;
+
             }
             return true;
         }

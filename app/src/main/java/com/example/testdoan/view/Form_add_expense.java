@@ -79,8 +79,9 @@ public class Form_add_expense extends BottomSheetDialogFragment {
         editText_category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String userid = MainActivity.user.getId();
                 Intent t = new Intent(getActivity(),Category_Manage.class);
+               t.putExtra("idcuauser",userid);
                 startActivityForResult(t,requestcodeForcategory);
             }
         });

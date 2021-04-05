@@ -68,6 +68,7 @@ public class ReportFragment extends Fragment {
     private static final String ARG_time = "param2";
     private String mode;
     private String time;
+    private String USERID;
 
     public static ReportFragment newInstance(String mode, String time) {
         ReportFragment fragment = new ReportFragment();
@@ -92,6 +93,7 @@ public class ReportFragment extends Fragment {
             mode = getArguments().getString(ARG_mode);
             time = getArguments().getString(ARG_time);
         }
+        USERID=MainActivity.user.getId();
     }
 
 
@@ -109,7 +111,7 @@ public class ReportFragment extends Fragment {
 
         Query query = MainActivity.db
                 .collection("users")
-                .document("YanMbTpDzBW2VKVBwDoC")
+                .document(USERID)
                 .collection("expense");
 
         switch (mode) {
@@ -311,7 +313,7 @@ public class ReportFragment extends Fragment {
     private void createLinechart(String mode, Date time, int year, int month, int day) {
         Query query = MainActivity.db
                 .collection("users")
-                .document("YanMbTpDzBW2VKVBwDoC")
+                .document(USERID)
                 .collection("expense");
 
         ArrayList<BarEntry> barEntriesIncome = new ArrayList<>();
@@ -633,10 +635,7 @@ public class ReportFragment extends Fragment {
             default:
                 return;
 
-
         }
-
-
     }
 
     private void createBarchart(String[] xValues, List<BarEntry> barEntriesIncome, List<BarEntry> barEntriesExpense, int limit) {

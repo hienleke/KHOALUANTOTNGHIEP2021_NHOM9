@@ -59,7 +59,7 @@ public class Iteam_expense_adapter extends FirestoreRecyclerAdapter<Expense, Exp
                     public void onClick(DialogInterface dialog, int which) {
                         MainActivity.db
                                 .collection("users")
-                                .document("YanMbTpDzBW2VKVBwDoC")
+                                .document(MainActivity.user.getId())
                                 .collection("expense").document(model.getId())
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -74,13 +74,7 @@ public class LoginFragment extends Fragment {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                    }
-                });
+        mAuth = FirebaseAuth.getInstance();
 
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -93,7 +87,7 @@ public class LoginFragment extends Fragment {
             startActivity(t);
         }
 
-        mAuth = FirebaseAuth.getInstance();
+
     }
 
     @Override
@@ -164,7 +158,6 @@ public class LoginFragment extends Fragment {
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
                                 Intent t = new Intent(getActivity(),MainActivity.class);
-
                                 t.putExtra("userName",user.getDisplayName());
                                 t.putExtra("userId",user.getUid());
                                 t.putExtra("userEmail",user.getUid());

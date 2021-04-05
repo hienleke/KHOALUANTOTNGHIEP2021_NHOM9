@@ -40,7 +40,7 @@ public class Form_add_category extends BottomSheetDialogFragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private String UserID = "YanMbTpDzBW2VKVBwDoC";
+    private String UserID = Category_Manage.user.getId();
     private Button save;
 
     private FirebaseFirestore db ;

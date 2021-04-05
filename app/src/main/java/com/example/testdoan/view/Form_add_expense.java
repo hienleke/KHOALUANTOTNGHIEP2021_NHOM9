@@ -44,7 +44,7 @@ public class Form_add_expense extends BottomSheetDialogFragment {
     private static final String ARG_PARAM2 = "param2";
     public static final int requestcodeForcategory = 1;
 
-    private String UserID = "YanMbTpDzBW2VKVBwDoC";
+    private String UserID ;
     private String mParam1;
     private TextView editText_time;
     private TextView editText_category;
@@ -76,6 +76,7 @@ public class Form_add_expense extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_form_add_expense, container, false);
         editText_category=v.findViewById(R.id.form_expense_category);
+        UserID =MainActivity.user.getId();
         editText_category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

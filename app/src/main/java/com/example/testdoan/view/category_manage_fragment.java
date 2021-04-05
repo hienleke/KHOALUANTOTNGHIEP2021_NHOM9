@@ -47,7 +47,7 @@ public class category_manage_fragment extends Fragment {
     public void onStart() {
         super.onStart();
         adapter.startListening();
-        USERID = Category_Manage.user.getId();
+
     }
 
     public static category_manage_fragment newInstance(String param1, String param2) {
@@ -66,7 +66,7 @@ public class category_manage_fragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        USERID = Category_Manage.user.getId();
         Query query = MainActivity.db
                 .collection("users")
                 .document(USERID)

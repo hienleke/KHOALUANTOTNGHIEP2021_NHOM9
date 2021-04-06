@@ -4,12 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +14,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+
 import com.example.testdoan.R;
-import com.example.testdoan.model.Expense;
+import com.example.testdoan.repository.Budgetmodify;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -49,11 +47,12 @@ public class Form_add_expense extends BottomSheetDialogFragment {
     private TextView editText_time;
     private TextView editText_category;
     private boolean type;
+    double amountbefore =-1;
+    boolean typeBefore;
 
     public Form_add_expense() {
         // Required empty public constructor
     }
-
 
     public static Form_add_expense newInstance(Bundle bundle) {
         Form_add_expense fragment = new Form_add_expense();
@@ -98,7 +97,6 @@ public class Form_add_expense extends BottomSheetDialogFragment {
                 int mDay = c.get(Calendar.DAY_OF_MONTH);
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
                         new DatePickerDialog.OnDateSetListener() {
-
                             @RequiresApi(api = Build.VERSION_CODES.O)
                             @Override
                             public void onDateSet(DatePicker view, int year,
@@ -118,24 +116,27 @@ public class Form_add_expense extends BottomSheetDialogFragment {
         TextView timeTextview =  (TextView)v.findViewById(R.id.form_expense_time);
         EditText NoteTextview =  v.findViewById(R.id.form_expense_note);
         Button save = v.findViewById(R.id.form_expense_save);
+        Bundle b = null;
+
         if(data!=null)
         {
-            Bundle b = getArguments().getBundle("expense");
+           b = getArguments().getBundle("expense");
             mParam1=b.getString("id");
+            amountbefore = Double.valueOf(b.getString("amount"));
+            typeBefore = b.getString("type").equalsIgnoreCase("income") ? true :false;
             categoryTextview.setText(b.getString("category"));
+            categoryTextview.setEnabled(false);
             amountTextview.setText(b.getString("amount"));
             SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MMM/yyyy");
             timeTextview.setText(format.format(Date.parse(b.getString("time"))));
             NoteTextview.setText(b.getString("note"));
-
         }
-
 
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                categoryTextview.setEnabled(true);
                 String Category =categoryTextview.getText().toString();
                 double amount = Double.valueOf(amountTextview.getText().toString());
                 String time =timeTextview.getText().toString();
@@ -177,6 +178,27 @@ public class Form_add_expense extends BottomSheetDialogFragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
+                        if(getArguments().getBundle("expense")!=null)
+                            if(typeBefore==type)
+                            {
+                                if(amount!=amountbefore)
+                                    Budgetmodify.modify(amount-amountbefore, (Boolean) data.get("expen"));
+                                dismiss();
+
+                            }
+                            else
+                            {
+                                if(amount==amountbefore)
+                                    Budgetmodify.modify(amount*2, (Boolean) data.get("expen"));
+                                else if(typeBefore ==true && type ==false)
+                                    Budgetmodify.modify(amount+amountbefore, (Boolean) data.get("expen"));
+                                else if(typeBefore==false && type==true)
+                                    Budgetmodify.modify(amount+amountbefore, (Boolean) data.get("expen"));
+                                dismiss();
+
+                            }
+                        else
+                        Budgetmodify.modify(amount, (Boolean) data.get("expen"));
                         dismiss();
                     }
 

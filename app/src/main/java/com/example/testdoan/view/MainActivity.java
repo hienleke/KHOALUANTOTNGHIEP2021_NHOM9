@@ -1,37 +1,40 @@
 package com.example.testdoan.view;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.fragment.app.FragmentManager;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.FrameLayout;
-
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.fragment.app.FragmentManager;
+
 import com.example.testdoan.R;
+import com.example.testdoan.externalView.HorizontalCalendarView;
 import com.example.testdoan.externalView.Tools;
 import com.example.testdoan.model.User;
-
+import com.example.testdoan.repository.Budgetmodify;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-
-import  com.example.testdoan.externalView.HorizontalCalendarView;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -49,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     private String timeCurrent;
     private boolean CurrentTabisExpense =true;
     private boolean CurrentTabisReport =false;
+    public static Double budget=0.0;
+
+
 
 
 
@@ -60,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseFirestore.setLoggingEnabled(true);
         Date date1 = new Date();
 
+
+
         Intent userdata = getIntent();
         user = new User();
         user.setId(userdata.getStringExtra("userId"));
@@ -70,8 +78,32 @@ public class MainActivity extends AppCompatActivity {
         timeCurrent=strDate;
 
 
+        db.collection("users").document(user.getId())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("xxx", "Listen failed.", e);
+                            return;
+                        }
+
+                        if (snapshot != null && snapshot.exists()) {
+                            Log.d("xxxbudget", "Current data: " + snapshot.getData());
+                            budget=snapshot.getDouble("budget");
+                            actionBar = getSupportActionBar();
+                            actionBar.setTitle("Budget: "+ (budget==null ? 0 : budget));
+                            if(budget==null)
+                                Budgetmodify.modify(0,false);
+
+                        } else {
+                            Log.d("xxxbudet", "Current data: null");
+
+                        }
+                    }
+                });
+
+
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        actionBar = getActionBar();
         container = findViewById(R.id.containerFramelayout);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -278,5 +310,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

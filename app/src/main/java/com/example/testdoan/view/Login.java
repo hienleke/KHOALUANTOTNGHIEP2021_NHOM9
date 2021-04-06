@@ -1,8 +1,8 @@
 package com.example.testdoan.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.testdoan.R;
 
@@ -14,5 +14,11 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
         getSupportFragmentManager().beginTransaction().add(R.id.login_container,LoginFragment.newInstance("sfda","Sdfas")).commit();
+    }
+
+
+    @Override
+    public void onBackPressed(){
+       super.onBackPressed();
     }
 }

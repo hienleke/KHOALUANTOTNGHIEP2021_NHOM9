@@ -2,10 +2,6 @@ package com.example.testdoan.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.example.testdoan.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,8 +27,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
-import java.util.concurrent.Executor;
 
 public class LoginFragment extends Fragment {
 
@@ -103,14 +100,14 @@ public class LoginFragment extends Fragment {
         Signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.login_container,RegisterFragment.newInstance("sfas","dasfasd")).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.login_container,RegisterFragment.newInstance("sfas","dasfasd")).addToBackStack(null).commit();
 
             }
         });
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.login_container,ForgotFragment.newInstance("sfas","dasfasd")).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.login_container,ForgotFragment.newInstance("sfas","dasfasd")).addToBackStack(null).commit();
 
             }
         });
@@ -156,12 +153,16 @@ public class LoginFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("xxx", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+
                             if (user != null) {
                                 Intent t = new Intent(getActivity(),MainActivity.class);
                                 t.putExtra("userName",user.getDisplayName());
                                 t.putExtra("userId",user.getUid());
                                 t.putExtra("userEmail",user.getUid());
+                                t.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(t);
+                                getActivity().finish();
                             }
                         } else {
                             // If sign in fails, display a message to the user.

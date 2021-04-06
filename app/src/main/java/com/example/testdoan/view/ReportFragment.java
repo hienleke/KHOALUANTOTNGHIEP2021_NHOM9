@@ -1,21 +1,18 @@
 package com.example.testdoan.view;
 
-import androidx.annotation.RequiresApi;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import android.os.LocaleList;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.testdoan.R;
 import com.example.testdoan.model.Expense;
@@ -32,13 +29,11 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -46,9 +41,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -524,7 +517,6 @@ public class ReportFragment extends Fragment {
 
                             it.remove();
                         }
-
                         Iterator it1 = mapExpense.entrySet().iterator();
                         while (it1.hasNext()) {
                             Map.Entry pair = (Map.Entry)it1.next();
@@ -532,25 +524,17 @@ public class ReportFragment extends Fragment {
                             barEntriesExpense.add(new BarEntry((Integer)pair.getKey(),d.floatValue()));
                             it1.remove();
                         }
-
                         List<String> temptemp = new ArrayList<String>();
                        int limit = end.getDate();
                         for(int i=1;i<=limit;i++)
                         {
                             temptemp.add(String.valueOf(i));
                         }
-
                         String[] xValues = new String[temptemp.size()];
                         xValues = temptemp.toArray(xValues);
-
-
                         createBarchart(xValues,   chuanhoa(barEntriesIncome,limit),   chuanhoa(barEntriesExpense,limit), limit);
-
                     }
                 });
-
-
-
                 break;
             case "year":
                 barChart.getDescription().setText("Month in year");

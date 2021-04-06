@@ -1,7 +1,6 @@
 package com.example.testdoan.repository;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
@@ -9,7 +8,7 @@ import com.example.testdoan.model.Category;
 
 import java.util.List;
 
-public class CategoryRepository {
+public class CategoryRepository  {
 
     private LiveData<List<Category>> allCategory;
 

@@ -1,14 +1,23 @@
 package com.example.testdoan.view;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.example.testdoan.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,10 +30,12 @@ public class RegisterFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private Button signup;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private FirebaseAuth mAuth;
+
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -55,6 +66,35 @@ public class RegisterFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        EditText txtemail = getActivity().findViewById(R.id.email_register);
+        EditText txtpass =getActivity().findViewById(R.id.password_register);
+        signup = getActivity().findViewById(R.id.signupacccount);
+        mAuth = FirebaseAuth.getInstance();
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = "";
+                String password="";
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d("xx", "createUserWithEmail:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                  //  updateUI(user);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w("xx", "createUserWithEmail:failure", task.getException());
+                                    Toast.makeText(getContext(), "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        });
+            }
+        });
     }
 
     @Override

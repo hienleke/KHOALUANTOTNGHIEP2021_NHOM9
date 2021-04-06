@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,8 @@ public class LoginFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private FirebaseAuth mAuth;
+    private EditText Login_email;
+    private EditText Login_pass;
 
     public LoginFragment(){
     }
@@ -54,6 +57,22 @@ public class LoginFragment extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            Intent t = new Intent(getActivity(),MainActivity.class);
+            t.putExtra("userName",user.getDisplayName());
+            t.putExtra("userId",user.getUid());
+            t.putExtra("userEmail",user.getUid());
+            startActivity(t);
+            getActivity().finish();
+
+        }
+
     }
 
     @Override
@@ -74,15 +93,8 @@ public class LoginFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            Intent t = new Intent(getActivity(),MainActivity.class);
 
-            t.putExtra("userName",user.getDisplayName());
-            t.putExtra("userId",user.getUid());
-            t.putExtra("userEmail",user.getUid());
-            startActivity(t);
-        }
+
 
 
     }
@@ -92,7 +104,8 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View v =  inflater.inflate(R.layout.fragment_login, container, false);
-
+        Login_email = v.findViewById(R.id.email_login);
+        Login_pass =v.findViewById(R.id.password_login);
         SignInButton signInButton = v.findViewById(R.id.sign_in_button);
         login = v.findViewById(R.id.signin);
         Signup = v.findViewById(R.id.signup);
@@ -109,6 +122,32 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.login_container,ForgotFragment.newInstance("sfas","dasfasd")).addToBackStack(null).commit();
 
+            }
+        });
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = Login_email.getText().toString();
+                String password = Login_pass.getText().toString();
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d("xx", "signInWithEmail:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                  //  updateUI(user);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w("x", "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(getActivity(), "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                   // updateUI(null);
+                                }
+                            }
+                        });
             }
         });
 

@@ -30,6 +30,30 @@ public class HorizontalCalendarView extends LinearLayout {
     Context context;
     AttributeSet attributeSet;
     RecyclerView recyclerView;
+    int pos =0;
+
+
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public AttributeSet getAttributeSet() {
+        return attributeSet;
+    }
+
+    public void setAttributeSet(AttributeSet attributeSet) {
+        this.attributeSet = attributeSet;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    public void setRecyclerView(RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+    }
+
     public interface OnCalendarListener{
         void onDateSelected(String date);
     }
@@ -102,7 +126,7 @@ public class HorizontalCalendarView extends LinearLayout {
         long today = Tools.getTimeInMillis(Tools.getFormattedDateToday());
         long current = start;
         int i=0;
-        int pos = 0;
+         pos = 0;
         while(current<end){
             c1.add(modeHandler,1);
             switch(mode) {
@@ -174,8 +198,6 @@ public class HorizontalCalendarView extends LinearLayout {
 
         recyclerView.setOnFlingListener(null);
 
-
-
         switch(mode) {
             case "date":
                 recyclerView.setAdapter(adapter);
@@ -200,6 +222,16 @@ public class HorizontalCalendarView extends LinearLayout {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.smoothScrollToPosition(pos);
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                View view = recyclerView.getLayoutManager().findViewByPosition(pos);
+                view.performClick();
+
+            }
+        });
+
+
 
 
 

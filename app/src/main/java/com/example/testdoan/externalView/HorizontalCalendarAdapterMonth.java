@@ -68,10 +68,7 @@ class HorizontalCalendarAdapterMonth extends RecyclerView.Adapter<HorizontalCale
 
         holder.parent.setMinimumWidth(Math.round(width/7));
 
-
-
         holder.month.setText(model.getData());
-
 
         if(model.getStatus()==0){
             holder.month.setTextColor(mCtx.getColor(R.color.grey_600));

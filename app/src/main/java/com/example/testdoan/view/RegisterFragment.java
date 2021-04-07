@@ -73,8 +73,8 @@ public class RegisterFragment extends Fragment {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = "";
-                String password="";
+                String email = txtemail.getText().toString();
+                String password=txtpass.getText().toString();
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                             @Override

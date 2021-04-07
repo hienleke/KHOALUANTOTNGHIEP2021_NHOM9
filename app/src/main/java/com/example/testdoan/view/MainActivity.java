@@ -240,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 endtime.add(Calendar.YEAR,5);
                 modeCurrent="year";
               //  fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
+
                 calendarView.setUpCalendar("year",starttime.getTimeInMillis(),
                         endtime.getTimeInMillis(),
                         datesToBeColored,

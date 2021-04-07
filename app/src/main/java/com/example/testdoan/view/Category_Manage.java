@@ -72,7 +72,6 @@ public class Category_Manage extends AppCompatActivity {
                         tab.setText("EXPENSE");
             }
         }).attach();
-
     }
 
 

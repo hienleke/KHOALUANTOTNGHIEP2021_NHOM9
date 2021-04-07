@@ -69,7 +69,6 @@ public class ExpenseFragment extends Fragment {
         args.putString(ARG_mode, mode);
         args.putString(ARG_time, time);
         fragment.setArguments(args);
-        
         return fragment;
         
     }
@@ -181,6 +180,7 @@ public class ExpenseFragment extends Fragment {
         recyclerView.addItemDecoration(new SpacesItemDecoration(50));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
 
         return v;
     }

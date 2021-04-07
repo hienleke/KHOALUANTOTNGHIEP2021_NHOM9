@@ -38,7 +38,7 @@
                     android:theme="@style/Widget.AppCompat.EditText">
 
                     <EditText
-                        android:id="@+id/email_login"
+                        android:id="@+id/email_forgot"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:backgroundTint="#FFFFFF"

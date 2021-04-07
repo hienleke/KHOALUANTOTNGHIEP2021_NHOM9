@@ -67,7 +67,7 @@ public class LoginFragment extends Fragment {
             Intent t = new Intent(getActivity(),MainActivity.class);
             t.putExtra("userName",user.getDisplayName());
             t.putExtra("userId",user.getUid());
-            t.putExtra("userEmail",user.getUid());
+            t.putExtra("userEmail",user.getEmail());
             startActivity(t);
             getActivity().finish();
 

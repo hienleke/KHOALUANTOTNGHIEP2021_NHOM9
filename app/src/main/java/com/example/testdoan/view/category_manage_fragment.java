@@ -1,28 +1,30 @@
 package com.example.testdoan.view;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.example.testdoan.R;
 import com.example.testdoan.externalView.Iteam_category_adapter;
 import com.example.testdoan.model.Category;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
+
 import com.google.firebase.firestore.Query;
+
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +61,7 @@ public class category_manage_fragment extends Fragment {
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,20 +91,27 @@ public class category_manage_fragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+
+
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
-                       String data=  adapter.getItem(position).getName();
-                       Intent t = new Intent();
-                       t.putExtra("data",data );
-                       t.putExtra("expen", Category_Manage.viewPager2.getCurrentItem()==0 ? false : true);
+                        String data=  adapter.getItem(position).getName();
+                        Intent t = new Intent();
+                        t.putExtra("data",data );
+                        t.putExtra("expen", Category_Manage.viewPager2.getCurrentItem()==0 ? false : true);
                         getActivity().setResult(Form_add_expense.requestcodeForcategory, t);
                         getActivity().finish();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            view.setTooltipText("Hold icon to edit");
+                        }
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
                         // do whatever
+
                     }
                 })
         );

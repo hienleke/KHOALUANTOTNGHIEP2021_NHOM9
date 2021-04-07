@@ -58,9 +58,6 @@ public class MainActivity extends AppCompatActivity {
     DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
 
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

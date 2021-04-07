@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.example.testdoan.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -93,6 +95,21 @@ public class Form_add_category extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 String text = name.getText().toString();
                 String textnote = note.getText().toString();
+
+                if(text.equals(null) || text.equalsIgnoreCase("")) {
+                    name.requestFocus();
+                    YoYo.with(Techniques.Tada)
+                            .duration(300)
+                            .repeat(2)
+                            .playOn(name);
+                    //amountTextview.setText("Enter your amount !!!");
+                    //amountTextview.setBackgroundColor(android.R.color.darker_gray);
+                    return;
+                }
+
+
+
+
                db=  FirebaseFirestore.getInstance();
                 DocumentReference dff =  db
                         .collection("users")

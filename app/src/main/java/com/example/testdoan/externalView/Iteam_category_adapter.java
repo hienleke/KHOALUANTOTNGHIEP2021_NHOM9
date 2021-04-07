@@ -1,10 +1,13 @@
 package com.example.testdoan.externalView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -13,6 +16,7 @@ import com.example.testdoan.model.Category;
 import com.example.testdoan.view.CategoryHolder;
 import com.example.testdoan.view.Category_Manage;
 import com.example.testdoan.view.Form_add_category;
+import com.example.testdoan.view.Form_add_expense;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -48,18 +52,22 @@ public class Iteam_category_adapter extends FirestoreRecyclerAdapter<Category, C
     protected void onBindViewHolder(@NonNull CategoryHolder holder, int position, @NonNull Category model) {
         holder.title.setText(model.getName());
         holder.note.setText(model.getNote());
-        holder.edit.setOnClickListener(new View.OnClickListener() {
+        holder.edit.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                        Bundle b = new Bundle();
-                        b.putString("id", model.getId());
-                        b.putString("name", model.getName());
-                        b.putString("note", model.getNote());
-                        b.putInt("incomeOrexpense", Category_Manage.viewPager2.getCurrentItem());
-                        BottomSheetDialogFragment fg = Form_add_category.newInstance(b,false);
+            public boolean onLongClick(View v) {
+                Bundle b = new Bundle();
+                b.putString("id", model.getId());
+                b.putString("name", model.getName());
+                b.putString("note", model.getNote());
+                b.putInt("incomeOrexpense", Category_Manage.viewPager2.getCurrentItem());
+                BottomSheetDialogFragment fg = Form_add_category.newInstance(b,false);
                 fg.show(((AppCompatActivity)context).getSupportFragmentManager(),"tagtag");
+                return false;
             }
+
+
         });
+
 
     }
 

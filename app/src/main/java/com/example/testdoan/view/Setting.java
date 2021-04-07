@@ -2,14 +2,18 @@ package com.example.testdoan.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -34,6 +38,7 @@ public class Setting extends Fragment {
         return new Setting();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -42,6 +47,10 @@ public class Setting extends Fragment {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+        TextView editTextemail = v.findViewById(R.id.txtprofileemail);
+        TextView editTextname = v.findViewById(R.id.txtprofilename);
+        editTextemail.setText(MainActivity.user.getEmail());
+        editTextname.setText(MainActivity.user.getName());
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
         setting_logout = v.findViewById(R.id.setting_logout);
         setting_logout.setOnClickListener(new View.OnClickListener() {

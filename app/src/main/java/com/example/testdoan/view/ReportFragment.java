@@ -4,9 +4,12 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +22,7 @@ import com.example.testdoan.model.Expense;
 import com.example.testdoan.viewmodel.ReportViewModel;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -29,6 +33,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.Query;
@@ -82,6 +87,7 @@ public class ReportFragment extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -214,7 +220,7 @@ public class ReportFragment extends Fragment {
         //grouping the data set from entry to chart
         PieData pieData = new PieData(pieDataSet);
         //showing the value of the entries, default true if not set
-        pieData.setValueFormatter(new PercentFormatter());
+        pieData.setValueFormatter(new PercentFormatter(chart));
         pieDataSet.setDrawValues(true);
 
         chart.setData(pieData);
@@ -222,16 +228,18 @@ public class ReportFragment extends Fragment {
         chart.invalidate();
         chart.setUsePercentValues(true);
         chart.setHighlightPerTapEnabled(true);
-        chart.getDescription().setText("");
+        chart.getDescription().setText("Income in this time");
 
 
         Legend l = chart.getLegend(); // get legend of pie
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP); // set vertical alignment for legend
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT); // set horizontal alignment for legend
-        l.setOrientation(Legend.LegendOrientation.VERTICAL); // set orientation for legend
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM); // set vertical alignment for legend
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT); // set horizontal alignment for legend
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL); // set orientation for legend
         //   l.setDrawInside(false); // set if legend should be drawn inside or not
+
+
         chart.setCenterText("Income");
-        chart.setCenterTextSize(23f);
+        chart.setCenterTextSize(19f);
         chart.setCenterTextColor(Color.parseColor("#1F8B24"));
         chart.invalidate();
 
@@ -260,20 +268,21 @@ public class ReportFragment extends Fragment {
         pieDataSet.setValueTextSize(12f);
         pieDataSet.setColors(colors);
         PieData pieData = new PieData(pieDataSet);
-        pieData.setValueFormatter(new PercentFormatter());
+        pieData.setValueFormatter(new PercentFormatter(expenseChart));
+
         pieDataSet.setDrawValues(true);
 
         expenseChart.setData(pieData);
         expenseChart.animateY(600);
         expenseChart.setUsePercentValues(true);
         expenseChart.setHighlightPerTapEnabled(true);
-        expenseChart.getDescription().setText("");
-        expenseChart.setCenterTextSize(23f);
+        expenseChart.getDescription().setText("Expense in this time");
+        expenseChart.setCenterTextSize(19f);
 
         Legend l = expenseChart.getLegend(); // get legend of pie
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP); // set vertical alignment for legend
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT); // set horizontal alignment for legend
-        l.setOrientation(Legend.LegendOrientation.VERTICAL); // set orientation for legend
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM); // set vertical alignment for legend
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT); // set horizontal alignment for legend
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL); //// set orientation for legend
         expenseChart.setCenterText("Expense");
         expenseChart.setCenterTextColor(Color.RED);
         expenseChart.invalidate();

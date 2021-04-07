@@ -39,9 +39,9 @@ android {
 }
 
 dependencies {
-
+    implementation 'com.github.douglasjunior:android-simple-tooltip:1.0.0-rc.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-
+    implementation 'com.daimajia.androidanimations:library:2.4@aar'
     implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
     implementation platform('com.google.firebase:firebase-bom:26.7.0')
 

@@ -145,12 +145,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:backgroundTint="#F4F2F2"
+                    android:maxLength="8"
                     android:drawableRight="@drawable/ic_lock_white_24dp"
                     android:drawablePadding="16dp"
                     android:fontFamily="@font/calibri"
                     android:hint="Password"
                     android:inputType="textPassword"
-                    android:maxLines="1"
+                    android:maxLines="8"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>

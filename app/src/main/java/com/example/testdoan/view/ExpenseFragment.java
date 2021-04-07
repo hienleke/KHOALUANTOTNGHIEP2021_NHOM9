@@ -3,40 +3,31 @@ package com.example.testdoan.view;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-
-
 import com.example.testdoan.R;
 import com.example.testdoan.externalView.Iteam_expense_adapter;
-import com.example.testdoan.model.Expense;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+
+;
 
 
 public class ExpenseFragment extends Fragment {
@@ -55,7 +46,7 @@ public class ExpenseFragment extends Fragment {
         this.USERID = USERID;
     }
 
-    private Button openFormAddExpenseIncome;
+    private FloatingActionButton openFormAddExpenseIncome;
     private RecyclerView recyclerView;
     private FirestoreRecyclerAdapter adapter ;
 
@@ -166,7 +157,7 @@ public class ExpenseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_expense, container, false);
-        openFormAddExpenseIncome =v.findViewById(R.id.addExpense);
+        openFormAddExpenseIncome =v.findViewById(R.id.addIncome);
         recyclerView=v.findViewById(R.id.iteam_debit_expense_recycleview);
 
         openFormAddExpenseIncome.setOnClickListener(new View.OnClickListener() {

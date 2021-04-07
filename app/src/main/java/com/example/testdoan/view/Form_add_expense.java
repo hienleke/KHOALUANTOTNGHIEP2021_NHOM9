@@ -2,6 +2,7 @@ package com.example.testdoan.view;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class Form_add_expense extends BottomSheetDialogFragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -49,6 +51,7 @@ public class Form_add_expense extends BottomSheetDialogFragment {
     private boolean type;
     double amountbefore =-1;
     boolean typeBefore;
+    DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
     public Form_add_expense() {
         // Required empty public constructor
@@ -126,7 +129,7 @@ public class Form_add_expense extends BottomSheetDialogFragment {
             typeBefore = b.getString("type").equalsIgnoreCase("income") ? true :false;
             categoryTextview.setText(b.getString("category"));
             categoryTextview.setEnabled(false);
-            amountTextview.setText(b.getString("amount"));
+            amountTextview.setText(decimalFormat.format(Double.valueOf(b.getString("amount"))));
             SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MMM/yyyy");
             timeTextview.setText(format.format(Date.parse(b.getString("time"))));
             NoteTextview.setText(b.getString("note"));

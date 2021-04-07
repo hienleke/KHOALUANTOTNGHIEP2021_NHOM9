@@ -2,6 +2,8 @@ package com.example.testdoan.externalView;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.icu.text.DecimalFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.text.SimpleDateFormat;
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class Iteam_expense_adapter extends FirestoreRecyclerAdapter<Expense, ExpenseHolder> {
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -33,6 +37,7 @@ public class Iteam_expense_adapter extends FirestoreRecyclerAdapter<Expense, Exp
      *
      * @param options
      */
+    DecimalFormat decimalFormat = new DecimalFormat("0.0");
     private  SimpleDateFormat format;
     private Context context;
     public Iteam_expense_adapter(@NonNull FirestoreRecyclerOptions<Expense> options, Context context) {
@@ -45,7 +50,7 @@ public class Iteam_expense_adapter extends FirestoreRecyclerAdapter<Expense, Exp
     protected void onBindViewHolder(@NonNull ExpenseHolder holder, int position, @NonNull Expense model) {
         boolean expenTemp = model.isExpen();
         double amountTemp= model.getAmount();
-        holder.amount.setText(String.valueOf(model.getAmount()));
+        holder.amount.setText(String.valueOf(decimalFormat.format(model.getAmount())));
         holder.category.setText(String.valueOf(model.getCategory()));
         holder.expenseorIncome.setText(model.isExpen()==false ? "Income" : "Expense");
         String strDate = format.format(model.getTimeCreated().toDate());

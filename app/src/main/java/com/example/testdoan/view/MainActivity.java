@@ -2,6 +2,7 @@ package com.example.testdoan.view;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class MainActivity extends AppCompatActivity {
 
     private FrameLayout container;
@@ -52,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private String timeCurrent;
     private boolean CurrentTabisExpense =true;
     private boolean CurrentTabisReport =false;
-    public static Double budget=0.0;
+    public static Double budget= 0.0;
+    DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
 
 
@@ -87,13 +90,17 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
 
-                        if (snapshot != null && snapshot.exists()) {
+                        if (snapshot != null ) {
                             Log.d("xxxbudget", "Current data: " + snapshot.getData());
                             budget=snapshot.getDouble("budget");
                             actionBar = getSupportActionBar();
-                            actionBar.setTitle("Budget: "+ (budget==null ? 0 : budget));
+                            actionBar.setTitle("Budget: "+ (budget==null ? "0" : decimalFormat.format(budget)));
+
                             if(budget==null)
-                                Budgetmodify.modify(0,false);
+                            {
+                                Budgetmodify.init(0);
+
+                            }
 
                         } else {
                             Log.d("xxxbudet", "Current data: null");
@@ -114,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
 
         starttime = Calendar.getInstance();
         starttime.add(Calendar.DATE,-10);
-
 
         endtime = Calendar.getInstance();
         endtime.add(Calendar.DATE,10);
@@ -137,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
                            fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                     }
                 });
-
-
 
     }
 

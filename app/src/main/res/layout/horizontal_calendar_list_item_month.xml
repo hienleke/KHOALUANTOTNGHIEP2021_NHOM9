@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/parent_month"
     android:layout_width="wrap_content"
-    android:layout_height="80dp"
+    android:layout_height="wrap_content"
     android:layout_marginEnd="1dp"
     android:orientation="vertical"
     android:paddingLeft="5dp"
@@ -10,8 +10,21 @@
     android:paddingBottom="5dp">
 
     <TextView
-        android:id="@+id/month_month"
+        android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/month_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp" />
 </LinearLayout>

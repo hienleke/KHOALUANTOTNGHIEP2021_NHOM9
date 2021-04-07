@@ -62,6 +62,9 @@ public class ReportFragment extends Fragment {
     private String mode;
     private String time;
     private String USERID;
+    private  Query query;
+    int[] colors;
+
 
     public static ReportFragment newInstance(String mode, String time) {
         ReportFragment fragment = new ReportFragment();
@@ -87,6 +90,7 @@ public class ReportFragment extends Fragment {
             time = getArguments().getString(ARG_time);
         }
         USERID=MainActivity.user.getId();
+        colors = getContext().getResources().getIntArray(R.array.mdcolor_random);
     }
 
 
@@ -102,7 +106,7 @@ public class ReportFragment extends Fragment {
         expenseChart = v.findViewById(R.id.chartExpense);
         expenseChart.setTouchEnabled(true);
 
-        Query query = MainActivity.db
+         query = MainActivity.db
                 .collection("users")
                 .document(USERID)
                 .collection("expense");
@@ -120,7 +124,9 @@ public class ReportFragment extends Fragment {
                 Date end = Date.from(localDate1.atTime(23, 59, 59).toInstant(currentOffsetForMyZone));
                 query = query.whereGreaterThanOrEqualTo("timeCreated", begin).whereLessThanOrEqualTo("timeCreated", end);
                 getdataforChart(query);
-                createLinechart("date", begin, year, month, day);
+                       createLinechart("date", begin, year, month, day);
+
+
                 break;
             case "week":
                 String time2begin = time.split("-")[0];
@@ -166,8 +172,12 @@ public class ReportFragment extends Fragment {
                 begin2 = Date.from(localDate2begin.atStartOfDay(zoneid2).toInstant());
                 end2 = Date.from(localDate2end.atTime(23, 59, 59).toInstant(currentOffsetForMyZone2));
                 query = query.whereGreaterThanOrEqualTo("timeCreated", begin2).whereLessThanOrEqualTo("timeCreated", end2);
+
                 getdataforChart(query);
                 createLinechart("year", begin2, year2begin, 1, 1);
+
+
+
                 break;
         }
         return v;
@@ -186,8 +196,7 @@ public class ReportFragment extends Fragment {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "Category";
 
-        int[] colors;
-        colors = getContext().getResources().getIntArray(R.array.mdcolor_random);
+
 
         //input data and fit data into pie chart entry
         Set<String> local = typeAmountMap.keySet();
@@ -241,8 +250,6 @@ public class ReportFragment extends Fragment {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "Category";
 
-        int[] colors;
-        colors = getContext().getResources().getIntArray(R.array.mdcolor_random);
 
         //input data and fit data into pie chart entry
         for (String type : typeAmountMap.keySet()) {

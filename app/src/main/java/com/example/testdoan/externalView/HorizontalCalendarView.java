@@ -100,23 +100,23 @@ public class HorizontalCalendarView extends LinearLayout {
         switch(mode) {
             case "date":
                 modeHandler=Calendar.DATE;
-                start-=10;
-                end+=10;
+                start-=20;
+                end+=20;
                 break;
             case "week":
                 modeHandler=Calendar.WEEK_OF_MONTH;
-                start-=10;
-                end+=10;
+                start-=20;
+                end+=20;
                 break;
             case "month":
                 modeHandler=Calendar.MONTH;
-                start=start-10;
-                end=end + 10;
+                start=start-20;
+                end=end + 20;
                 break;
             case "year":
                 modeHandler=Calendar.YEAR;
-                start-=5;
-                end+=5;
+                start-=10;
+                end+=10;
                 break;
         }
 
@@ -196,7 +196,7 @@ public class HorizontalCalendarView extends LinearLayout {
         HorizontalCalendarAdapterYear adapterYear = new HorizontalCalendarAdapterYear(list,context);
         adapterYear.setOnCalendarListener(onCalendarListener);
 
-        recyclerView.setOnFlingListener(null);
+
 
         switch(mode) {
             case "date":
@@ -219,17 +219,17 @@ public class HorizontalCalendarView extends LinearLayout {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false);
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
-
+        recyclerView.setOnFlingListener(null);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.smoothScrollToPosition(pos);
-        recyclerView.post(new Runnable() {
+        recyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 View view = recyclerView.getLayoutManager().findViewByPosition(pos);
                 view.performClick();
 
             }
-        });
+        },200);
 
 
 

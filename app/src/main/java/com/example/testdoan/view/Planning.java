@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.testdoan.R;
 import com.example.testdoan.repository.Budgetmodify;
 import com.example.testdoan.viewmodel.PlanningViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class Planning extends Fragment {
@@ -28,6 +29,8 @@ public class Planning extends Fragment {
     private PlanningViewModel mViewModel;
     private Button btnSave;
     private ListView lv;
+    private FloatingActionButton addrecurringExpense;
+    private FloatingActionButton addPlanning;
     DecimalFormat decimalFormat = new DecimalFormat("0.0");
     public static Planning newInstance() {
         return new Planning();
@@ -40,7 +43,7 @@ public class Planning extends Fragment {
         EditText txtBudget = v.findViewById(R.id.txtbudget);
         txtBudget.setText(String.valueOf(decimalFormat.format(MainActivity.budget)));
         btnSave = v.findViewById(R.id.updateBudget);
-        lv = v.findViewById(R.id.planing_setting_menu);
+
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override

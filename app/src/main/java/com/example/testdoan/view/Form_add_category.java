@@ -1,19 +1,15 @@
 package com.example.testdoan.view;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -21,16 +17,11 @@ import com.example.testdoan.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -115,13 +106,14 @@ public class Form_add_category extends BottomSheetDialogFragment {
                         .collection("users")
                         .document(UserID);
                     if (mParam2==true)
-                          dff=  dff.collection(mParam3==0 ? "category_income" : "category_expense").document();
+                          dff=  dff.collection("category").document();
                     else
-                       dff= dff.collection(mParam3==0 ? "category_income" : "category_expense").document(mParam1);
+                       dff= dff.collection("category").document(mParam1);
 
                 Map<String, Object> data = new HashMap<>();
                 data.put("name", text);
                 data.put("note", textnote);
+                data.put("expen", mParam3== 0 ? false : true);
                 dff.set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

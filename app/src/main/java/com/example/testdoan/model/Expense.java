@@ -12,6 +12,35 @@ public class Expense {
     private String note;
     private double amount;
     private boolean expen;
+    private boolean periodic;
+    private boolean enable;
+
+    public Expense(String id, String category, Timestamp timeCreated, String note, double amount, boolean expen, boolean periodic, boolean enable) {
+        this.id = id;
+        this.category = category;
+        this.timeCreated = timeCreated;
+        this.note = note;
+        this.amount = amount;
+        this.expen = expen;
+        this.periodic = periodic;
+        this.enable = enable;
+    }
+
+    public boolean isPeriodic() {
+        return periodic;
+    }
+
+    public void setPeriodic(boolean periodic) {
+        this.periodic = periodic;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
 
     public Expense() {
     }
@@ -80,4 +109,6 @@ public class Expense {
     public void setExpen(boolean expen) {
         this.expen = expen;
     }
+
+
 }

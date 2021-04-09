@@ -28,12 +28,12 @@
             >
 
             <TextView
-                android:id="@+id/iteam_expenseOrincome"
+                android:id="@+id/iteam_expenseOrincome_periodic"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="200dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 android:text="zxcZXC"
                 android:textColor="@color/blue_grey_300"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -41,7 +41,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/iteam_time"
+                android:id="@+id/iteam_time_periodic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -53,6 +53,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,45 +72,43 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/iteam_category_name"
+                android:id="@+id/iteam_category_name_periodic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
                 android:text="TextView"
                 android:textColor="@color/overlay_dark_90"
                 android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/iteam_amount" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/iteam_amount"
+                android:id="@+id/iteam_amount_periodic"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="120dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="100dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginStart="15dp"
                 android:text="TextViewasdfas"
                 android:textColor="@color/overlay_dark_90"
                 android:textSize="24sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintBottom_toBottomOf="@+id/iteam_category_name_periodic"
+                app:layout_constraintStart_toEndOf="@+id/iteam_category_name_periodic"
+                app:layout_constraintTop_toTopOf="@+id/iteam_category_name_periodic" />
 
             <ImageView
-                android:id="@+id/iteam_delete_button"
+                android:id="@+id/iteam_delete_button_periodic"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="32dp"
                 android:scaleType="fitCenter"
                 android:scaleX="2"
                 android:scaleY="2"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/iteam_amount_periodic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintTop_toTopOf="@+id/iteam_amount_periodic"
                 app:srcCompat="@android:drawable/ic_menu_delete" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

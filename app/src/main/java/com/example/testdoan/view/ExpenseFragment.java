@@ -29,7 +29,7 @@ import java.util.Date;
 
 ;
 
-
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class ExpenseFragment extends Fragment {
 
     private static final String ARG_mode = "param1";
@@ -49,6 +49,7 @@ public class ExpenseFragment extends Fragment {
     private FloatingActionButton openFormAddExpenseIncome;
     private RecyclerView recyclerView;
     private FirestoreRecyclerAdapter adapter ;
+
 
     public ExpenseFragment() {
         USERID=MainActivity.user.getId();

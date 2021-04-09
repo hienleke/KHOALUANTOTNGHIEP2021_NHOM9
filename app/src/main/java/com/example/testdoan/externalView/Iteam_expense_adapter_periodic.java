@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -15,8 +14,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.testdoan.R;
 import com.example.testdoan.model.Expense;
+import com.example.testdoan.model.ExpensePeriodic;
 import com.example.testdoan.repository.Budgetmodify;
 import com.example.testdoan.view.ExpenseHolder;
 import com.example.testdoan.view.Form_add_expense;
@@ -30,7 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.text.SimpleDateFormat;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class Iteam_expense_adapter extends FirestoreRecyclerAdapter<Expense, ExpenseHolder> {
+public class Iteam_expense_adapter_periodic extends FirestoreRecyclerAdapter<ExpensePeriodic, ExpenseHolderPeriodic> {
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
@@ -40,7 +39,7 @@ public class Iteam_expense_adapter extends FirestoreRecyclerAdapter<Expense, Exp
     DecimalFormat decimalFormat = new DecimalFormat("0.0");
     private  SimpleDateFormat format;
     private Context context;
-    public Iteam_expense_adapter(@NonNull FirestoreRecyclerOptions<Expense> options, Context context) {
+    public Iteam_expense_adapter_periodic(@NonNull FirestoreRecyclerOptions<Expense> options, Context context) {
         super(options);
         format = new SimpleDateFormat("EEE, dd/MMM/yyyy");
         this.context = context;
@@ -65,7 +64,7 @@ public class Iteam_expense_adapter extends FirestoreRecyclerAdapter<Expense, Exp
                         MainActivity.db
                                 .collection("users")
                                 .document(MainActivity.user.getId())
-                                .collection("expense").document(model.getId())
+                                .collection("expense_periodic").document(model.getId())
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -107,13 +106,14 @@ public class Iteam_expense_adapter extends FirestoreRecyclerAdapter<Expense, Exp
         });
     }
 
+    @Override
+    protected void onBindViewHolder(@NonNull ExpenseHolderPeriodic holder, int position, @NonNull ExpensePeriodic model) {
+
+    }
+
     @NonNull
     @Override
-    public ExpenseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view
-                = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.iteam_expense_debitrepay, parent, false);
-
-        return new ExpenseHolder(view);
+    public ExpenseHolderPeriodic onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return null;
     }
 }

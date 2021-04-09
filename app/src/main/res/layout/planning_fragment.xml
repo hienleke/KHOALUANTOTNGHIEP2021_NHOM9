@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:divider="@drawable/divider8p"
             android:orientation="vertical"
-            android:padding="20dp"
+            android:padding="10dp"
             android:showDividers="middle">
 
             <androidx.cardview.widget.CardView
@@ -48,9 +48,10 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/periodicIteam_expense"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="6dp"
+                        android:padding="3dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +60,7 @@
                     </androidx.recyclerview.widget.RecyclerView>
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/addtietkiem"
+                        android:id="@+id/addchitieuthuongxuyen"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|right"
@@ -101,7 +102,7 @@
                     </androidx.recyclerview.widget.RecyclerView>
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/addChitieuthuongxuyen"
+                        android:id="@+id/addPlanning"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|right"

@@ -31,13 +31,14 @@
         <EditText
             android:id="@+id/form_expense_amount"
             android:layout_width="100dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight=".75"
-            android:maxLength="13"
             android:background="@drawable/rouder_edittext"
             android:inputType="numberDecimal"
+            android:maxLength="13"
             android:padding="7dp" />
+
     </LinearLayout>
 
 

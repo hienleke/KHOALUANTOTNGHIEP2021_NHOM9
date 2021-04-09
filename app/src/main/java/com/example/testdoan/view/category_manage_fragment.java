@@ -3,6 +3,9 @@ package com.example.testdoan.view;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,21 +13,12 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
-
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.testdoan.R;
 import com.example.testdoan.externalView.Iteam_category_adapter;
 import com.example.testdoan.model.Category;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-
 import com.google.firebase.firestore.Query;
-
-import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,7 +67,7 @@ public class category_manage_fragment extends Fragment {
         Query query = MainActivity.db
                 .collection("users")
                 .document(USERID)
-                .collection(mParam1=="income"? "category_income" : "category_expense");
+                .collection("category").whereEqualTo("expen", mParam1=="income"? false : true);
         FirestoreRecyclerOptions<Category> options = new FirestoreRecyclerOptions.Builder<com.example.testdoan.model.Category>()
                 .setQuery(query, com.example.testdoan.model.Category.class)
                 .build();

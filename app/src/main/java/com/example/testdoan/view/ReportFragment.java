@@ -4,12 +4,9 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +19,6 @@ import com.example.testdoan.model.Expense;
 import com.example.testdoan.viewmodel.ReportViewModel;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -33,7 +29,6 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.Query;
@@ -115,7 +110,7 @@ public class ReportFragment extends Fragment {
          query = MainActivity.db
                 .collection("users")
                 .document(USERID)
-                .collection("expense");
+                .collection("expense").whereEqualTo("periodic",false);
 
         switch (mode) {
             case "date":

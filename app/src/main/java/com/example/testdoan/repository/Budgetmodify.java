@@ -1,6 +1,9 @@
 package com.example.testdoan.repository;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.example.testdoan.view.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -11,6 +14,7 @@ import java.util.Map;
 
 public class Budgetmodify {
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static void modify(double amount, boolean expen)
     {
         amount =  expen==true ?  MainActivity.budget -amount :  MainActivity.budget +amount;

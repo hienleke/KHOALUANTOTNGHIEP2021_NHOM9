@@ -8,6 +8,7 @@ public class Category {
     private String id;
     private String name;
     private String note;
+    private boolean expen;
 
     public Category() {
     }
@@ -16,6 +17,20 @@ public class Category {
     public Category(String name, String note) {
         this.name = name;
         this.note = note;
+    }
+
+    public Category(String name, String note, boolean expen) {
+        this.name = name;
+        this.note = note;
+        this.expen = expen;
+    }
+
+    public boolean isExpen() {
+        return expen;
+    }
+
+    public void setExpen(boolean expen) {
+        this.expen = expen;
     }
 
     public String getNote() {

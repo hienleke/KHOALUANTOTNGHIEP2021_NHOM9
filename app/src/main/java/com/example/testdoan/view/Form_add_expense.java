@@ -2,7 +2,6 @@ package com.example.testdoan.view;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,7 +26,6 @@ import com.example.testdoan.repository.Budgetmodify;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.SetOptions;
@@ -41,13 +39,10 @@ import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class Form_add_expense extends BottomSheetDialogFragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static Bundle data = null;
     private static final String ARG_PARAM2 = "param2";
     public static final int requestcodeForcategory = 1;
-
+    private boolean isclick = false;
     private String UserID ;
     private String mParam1;
     private TextView editText_time;
@@ -143,12 +138,14 @@ public class Form_add_expense extends BottomSheetDialogFragment {
         }
 
 
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(isclick==true)
+                    return;
                 String Category =categoryTextview.getText().toString();
-
+                isclick=true;
                  amount = 0;
                 try {
                     amount = Double.valueOf(amountTextview.getText().toString().replace(",", "."));
@@ -160,12 +157,9 @@ public class Form_add_expense extends BottomSheetDialogFragment {
                             .duration(300)
                             .repeat(2)
                             .playOn(amountTextview);
-                    //amountTextview.setText("Enter your amount !!!");
-                    //amountTextview.setBackgroundColor(android.R.color.darker_gray);
+                    isclick=false;
                     return;
                 }
-
-
                 String time =timeTextview.getText().toString();
                 String note =NoteTextview.getText().toString();
                 SimpleDateFormat formatter =   new SimpleDateFormat("EEE, dd/MMM/yyyy");
@@ -177,12 +171,11 @@ public class Form_add_expense extends BottomSheetDialogFragment {
                 {
                     e.printStackTrace();
                     Log.d("loi ngay", "loi ngay");
+                    isclick=false;
                 }
 
                 Timestamp timestamp = new Timestamp( date );
-
                 Map<String, Object> data = new HashMap<>();
-
                 data.put("amount", amount);
                 data.put("category", Category);
                 data.put("expen", type);
@@ -210,8 +203,8 @@ public class Form_add_expense extends BottomSheetDialogFragment {
                             {
                                 if(amount!=amountbefore)
                                     Budgetmodify.modify(amount-amountbefore, (Boolean) data.get("expen"));
+                                isclick=false;
                                 dismiss();
-
                             }
                             else
                             {
@@ -222,14 +215,12 @@ public class Form_add_expense extends BottomSheetDialogFragment {
 //                                else if(typeBefore==false && type==true)
 //                                    Budgetmodify.modify(amount+amountbefore, (Boolean) data.get("expen"));
                                 dismiss();
-
                             }
                         else
                         Budgetmodify.modify(amount, (Boolean) data.get("expen"));
 
                         categoryTextview.setEnabled(true);
                         dismiss();
-
                     }
 
                 }).addOnFailureListener(new OnFailureListener() {

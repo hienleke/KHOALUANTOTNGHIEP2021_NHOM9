@@ -110,7 +110,7 @@ public class ReportFragment extends Fragment {
          query = MainActivity.db
                 .collection("users")
                 .document(USERID)
-                .collection("expense").whereEqualTo("periodic",false);
+                .collection("expense");
 
         switch (mode) {
             case "date":

@@ -16,12 +16,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="@color/blue_grey_100"
 
@@ -68,7 +68,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1">
 
             <TextView
@@ -76,7 +76,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="TextView"
                 android:textColor="@color/overlay_dark_90"
                 android:textSize="24sp"
@@ -100,12 +101,12 @@
                 android:id="@+id/iteam_delete_button_periodic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="8dp"
                 android:scaleType="fitCenter"
-                android:scaleX="2"
-                android:scaleY="2"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
                 app:layout_constraintBottom_toBottomOf="@+id/iteam_amount_periodic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/iteam_amount_periodic"

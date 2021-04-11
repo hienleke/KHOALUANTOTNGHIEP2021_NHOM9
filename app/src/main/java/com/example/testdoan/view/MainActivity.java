@@ -20,12 +20,16 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.fragment.app.FragmentManager;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.example.testdoan.R;
 import com.example.testdoan.externalView.HorizontalCalendarView;
 import com.example.testdoan.externalView.Tools;
 import com.example.testdoan.model.User;
 import com.example.testdoan.repository.Budgetmodify;
+import com.example.testdoan.service.WorkForPeriodTask;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -36,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -67,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
         Date date1 = new Date();
 
 
+        PeriodicWorkRequest.Builder photoCheckBuilder =
+                new PeriodicWorkRequest.Builder(WorkForPeriodTask.class, 1, TimeUnit.DAYS);
+        PeriodicWorkRequest request = photoCheckBuilder.build();
+        WorkManager.getInstance().enqueueUniquePeriodicWork("vcl", ExistingPeriodicWorkPolicy.KEEP , request);
 
         Intent userdata = getIntent();
         user = new User();

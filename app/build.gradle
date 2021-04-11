@@ -35,12 +35,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
 
-
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
     implementation 'com.daimajia.androidanimations:library:2.4@aar'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.daimajia.androidanimations:library:2.4@aar'
@@ -66,5 +69,28 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:20.0.3'
     implementation 'com.android.support:cardview-v7:28.0.0'
     testImplementation 'junit:junit:4.12'
+
+
+
+    def work_version = "2.5.0"
+
+    // (Java only)
+    implementation "androidx.work:work-runtime:$work_version"
+
+    // Kotlin + coroutines
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
+    // optional - RxJava2 support
+    implementation "androidx.work:work-rxjava2:$work_version"
+
+    // optional - GCMNetworkManager support
+    implementation "androidx.work:work-gcm:$work_version"
+
+    // optional - Test helpers
+    androidTestImplementation "androidx.work:work-testing:$work_version"
+
+    // optional - Multiprocess support
+    implementation "androidx.work:work-multiprocess:$work_version"
+
 
 }

@@ -13,7 +13,6 @@ public class Category {
     public Category() {
     }
 
-
     public Category(String name, String note) {
         this.name = name;
         this.note = note;

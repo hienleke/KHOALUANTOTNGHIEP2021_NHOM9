@@ -1,7 +1,26 @@
 package com.example.testdoan.viewmodel;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.testdoan.model.Planing;
+import com.example.testdoan.view.Planning;
+
+
+import java.util.List;
+
 public class PlanningViewModel extends ViewModel {
-    // TODO: Implement the ViewModel
+    private MutableLiveData<Planing> users;
+    public LiveData<Planing> getUsers() {
+        if (users == null) {
+            users = new MutableLiveData<Planing>();
+            loadUsers();
+        }
+        return users;
+    }
+
+    private void loadUsers() {
+        // Do an asynchronous operation to fetch users.
+    }
 }

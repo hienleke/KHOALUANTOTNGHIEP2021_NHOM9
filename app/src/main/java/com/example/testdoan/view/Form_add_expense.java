@@ -137,8 +137,6 @@ public class Form_add_expense extends BottomSheetDialogFragment {
             NoteTextview.setText(b.getString("note"));
         }
 
-
-
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,6 +147,16 @@ public class Form_add_expense extends BottomSheetDialogFragment {
                  amount = 0;
                 try {
                     amount = Double.valueOf(amountTextview.getText().toString().replace(",", "."));
+                    if(amount==0)
+                    {
+                        amountTextview.requestFocus();
+                        YoYo.with(Techniques.Tada)
+                                .duration(300)
+                                .repeat(2)
+                                .playOn(amountTextview);
+                        isclick=false;
+                        return;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -218,11 +226,9 @@ public class Form_add_expense extends BottomSheetDialogFragment {
                             }
                         else
                         Budgetmodify.modify(amount, (Boolean) data.get("expen"));
-
                         categoryTextview.setEnabled(true);
                         dismiss();
                     }
-
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -243,7 +249,6 @@ public class Form_add_expense extends BottomSheetDialogFragment {
             TextView v = getView().findViewById(R.id.form_expense_category);
             v.setText(data.getStringExtra("data"));
             type = data.getBooleanExtra("expen", true);
-            // v.setText(data.getStringExtra("category"));
         }
     }
 

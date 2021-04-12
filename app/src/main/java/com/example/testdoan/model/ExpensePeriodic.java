@@ -25,7 +25,14 @@ public class ExpensePeriodic {
         this.enable = enable;
     }
 
-
+    public ExpensePeriodic(String category, Timestamp timeCreated, String note, double amount, boolean expen, boolean enable) {
+        this.category = category;
+        this.timeCreated = timeCreated;
+        this.note = note;
+        this.amount = amount;
+        this.expen = expen;
+        this.enable = enable;
+    }
 
     public boolean isEnable() {
         return enable;

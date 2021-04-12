@@ -150,6 +150,18 @@ int q=0;
                 amount = 0;
                 try {
                     amount = Double.valueOf(amountTextview.getText().toString().replace(",", "."));
+                    if(amount==0)
+                    {
+                        amountTextview.requestFocus();
+                        YoYo.with(Techniques.Tada)
+                                .duration(300)
+                                .repeat(2)
+                                .playOn(amountTextview);
+                        isclick=false;
+                        return;
+                    }
+
+
                 }
                 catch (Exception e)
                 {
@@ -204,8 +216,7 @@ int q=0;
                         if(getArguments().getBundle("expense")!=null)
                             if(typeBefore==type)
                             {
-                                if(amount!=amountbefore)
-                                    Budgetmodify.modify(amount-amountbefore, (Boolean) data.get("expen"));
+
                                 isclick=false;
                                 dismiss();
                             }

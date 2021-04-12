@@ -20,7 +20,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.fragment.app.FragmentManager;
+import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -71,12 +73,6 @@ public class MainActivity extends AppCompatActivity {
         FirebaseFirestore.setLoggingEnabled(true);
         Date date1 = new Date();
 
-
-        PeriodicWorkRequest.Builder photoCheckBuilder =
-                new PeriodicWorkRequest.Builder(WorkForPeriodTask.class, 1, TimeUnit.DAYS);
-        PeriodicWorkRequest request = photoCheckBuilder.build();
-        WorkManager.getInstance().enqueueUniquePeriodicWork("vcl", ExistingPeriodicWorkPolicy.KEEP , request);
-
         Intent userdata = getIntent();
         user = new User();
         user.setId(userdata.getStringExtra("userId"));
@@ -85,6 +81,25 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String strDate = formatter.format(date1);
         timeCurrent=strDate;
+
+
+
+        Constraints constraints = new Constraints.Builder()
+                // The Worker needs Network connectivity
+                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+                .setRequiresCharging(false)
+                .setRequiresBatteryNotLow(false)
+                .setRequiresStorageNotLow(false)
+                .setRequiresDeviceIdle(false)
+                .build();
+        PeriodicWorkRequest photoCheckBuilder =
+                new PeriodicWorkRequest.Builder(WorkForPeriodTask.class, 15, TimeUnit.MINUTES).setConstraints(constraints).build();
+
+        WorkManager
+                .getInstance(getApplicationContext())
+                .enqueueUniquePeriodicWork("vcl", ExistingPeriodicWorkPolicy.KEEP , photoCheckBuilder);
+
+
 
 
         db.collection("users").document(user.getId())

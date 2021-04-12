@@ -22,7 +22,6 @@ import androidx.annotation.RequiresApi;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.testdoan.R;
-import com.example.testdoan.repository.Budgetmodify;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -132,6 +131,16 @@ public class form_add_Planning extends BottomSheetDialogFragment {
                 amount = 0;
                 try {
                     amount = Double.valueOf(amountTextview.getText().toString().replace(",", "."));
+                    if(amount==0)
+                    {
+                        amountTextview.requestFocus();
+                        YoYo.with(Techniques.Tada)
+                                .duration(300)
+                                .repeat(2)
+                                .playOn(amountTextview);
+                        isclick=false;
+                        return;
+                    }
                 }
                 catch (Exception e)
                 {

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.testdoan.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -81,7 +82,14 @@ public class ForgotFragment extends Fragment {
                 mAuth.sendPasswordResetEmail(email2reset).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "One email just sent pls check your email", Toast.LENGTH_SHORT).show();
+                        getFragmentManager().popBackStack();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Fail", Toast.LENGTH_SHORT).show();
+
                     }
                 });
             }

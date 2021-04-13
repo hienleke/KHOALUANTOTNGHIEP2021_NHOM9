@@ -30,8 +30,10 @@ import com.example.testdoan.model.ExpensePeriodic;
 import com.example.testdoan.repository.Budgetmodify;
 import com.example.testdoan.viewmodel.PlanningViewModel;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
@@ -47,6 +49,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.Calendar;
 import java.util.Date;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -174,8 +177,23 @@ public class Planning extends Fragment {
 
 
 
-                                LocalDate localDate2begin = LocalDate.of(startt.getYear(),startt.getMonth(),startt.getDate());
-                                LocalDate localDate2end = LocalDate.of(endd.getYear(),endd.getMonth(),endd.getDate());
+                                Calendar calendar =Calendar.getInstance();
+                                calendar.setTime(startt);
+                                int year = calendar.get(Calendar.YEAR);
+//Add one to month {0 - 11}
+                                int month = calendar.get(Calendar.MONTH) + 1;
+                                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+
+                                LocalDate localDate2begin = LocalDate.of(year,month,day);
+
+
+                                calendar.setTime(endd);
+                                 year = calendar.get(Calendar.YEAR);
+//Add one to month {0 - 11}
+                                 month = calendar.get(Calendar.MONTH) + 1;
+                                day = calendar.get(Calendar.DAY_OF_MONTH);
+                                LocalDate localDate2end = LocalDate.of(year,month,day);
 
                                 ZoneId zoneid2 = ZoneId.systemDefault();
                                 Instant instant2 = Instant.now();
@@ -189,20 +207,15 @@ public class Planning extends Fragment {
                                         .document(MainActivity.user.getId())
                                         .collection("expense")
                                         .whereGreaterThanOrEqualTo("timeCreated", begin2)
-                                        .whereLessThanOrEqualTo("timeCreated",end2)
-                                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        .whereLessThanOrEqualTo("timeCreated",end2).get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
-                                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                                if (error != null) {
-                                                    Log.w("xxx", "Listen failed.", e);
-                                                    return;
-                                                }
-
-                                              double tong=0;
-                                              double tong1=0;
-                                                for (QueryDocumentSnapshot doc : value) {
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                double tong=0;
+                                                double tong1=0;
+                                                for (QueryDocumentSnapshot doc : task.getResult()) {
                                                     if (doc.getBoolean("expen")) {
-                                                       tong+=doc.getDouble("amount");
+                                                        tong+=doc.getDouble("amount");
                                                     }
                                                     if (!doc.getBoolean("expen")) {
                                                         tong1+=doc.getDouble("amount");
@@ -211,9 +224,9 @@ public class Planning extends Fragment {
 
                                                 progressBar2.setMax((int) amountqqq);
                                                 progressBar2.setProgress((int)(tong1-tong));
-
                                             }
                                         });
+
 
                             }
                             catch (Exception ex)

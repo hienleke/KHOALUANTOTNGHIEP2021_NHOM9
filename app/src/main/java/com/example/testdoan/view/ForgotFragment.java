@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.testdoan.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -79,9 +80,9 @@ public class ForgotFragment extends Fragment {
             @Override
             public void onClick(View v) {
               String email2reset=   editText.getText().toString();
-                mAuth.sendPasswordResetEmail(email2reset).addOnCompleteListener(new OnCompleteListener<Void>() {
+                mAuth.sendPasswordResetEmail(email2reset).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onSuccess(Void aVoid) {
                         Toast.makeText(getContext(), "One email just sent pls check your email", Toast.LENGTH_SHORT).show();
                         getFragmentManager().popBackStack();
                     }

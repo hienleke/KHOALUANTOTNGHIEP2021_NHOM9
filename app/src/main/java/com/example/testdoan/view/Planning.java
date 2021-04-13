@@ -198,20 +198,20 @@ public class Planning extends Fragment {
                                                     return;
                                                 }
 
-
                                               double tong=0;
                                               double tong1=0;
                                                 for (QueryDocumentSnapshot doc : value) {
-                                                    if (doc.getDouble("amount") != null && doc.getBoolean("expen")) {
+                                                    if (doc.getBoolean("expen")) {
                                                        tong+=doc.getDouble("amount");
                                                     }
-                                                    if (doc.getDouble("amount") != null && !doc.getBoolean("expen")) {
+                                                    if (!doc.getBoolean("expen")) {
                                                         tong1+=doc.getDouble("amount");
                                                     }
                                                 }
 
                                                 progressBar2.setMax((int) amountqqq);
                                                 progressBar2.setProgress((int)(tong1-tong));
+
                                             }
                                         });
 

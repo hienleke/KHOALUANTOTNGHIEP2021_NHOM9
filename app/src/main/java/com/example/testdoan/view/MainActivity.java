@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 .setRequiresDeviceIdle(false)
                 .build();
         PeriodicWorkRequest photoCheckBuilder =
-                new PeriodicWorkRequest.Builder(WorkForPeriodTask.class, 15, TimeUnit.MINUTES).setConstraints(constraints).build();
+                new PeriodicWorkRequest.Builder(WorkForPeriodTask.class, 1, TimeUnit.DAYS).setConstraints(constraints).build();
 
         WorkManager
                 .getInstance(getApplicationContext())

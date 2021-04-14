@@ -1,8 +1,10 @@
 package com.example.testdoan.externalView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.icu.text.DecimalFormat;
+import android.icu.text.DecimalFormatSymbols;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,15 +39,19 @@ public class Iteam_expense_adapter extends FirestoreRecyclerAdapter<Expense, Exp
      *
      * @param options
      */
-    DecimalFormat decimalFormat = new DecimalFormat("0.0");
+    DecimalFormat decimalFormat = new DecimalFormat("#,###.00 ¤");
     private  SimpleDateFormat format;
     private Context context;
     public Iteam_expense_adapter(@NonNull FirestoreRecyclerOptions<Expense> options, Context context) {
         super(options);
         format = new SimpleDateFormat("EEE, dd/MMM/yyyy");
         this.context = context;
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setDecimalSeparator('.');
+        decimalFormat.setDecimalFormatSymbols(symbols);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onBindViewHolder(@NonNull ExpenseHolder holder, int position, @NonNull Expense model) {
         boolean expenTemp = model.isExpen();
@@ -55,6 +61,7 @@ public class Iteam_expense_adapter extends FirestoreRecyclerAdapter<Expense, Exp
         holder.expenseorIncome.setText(model.isExpen()==false ? "Income" : "Expense");
         String strDate = format.format(model.getTimeCreated().toDate());
         holder.time.setText(strDate);
+        holder.iteam_background.setBackgroundResource(model.isExpen()==false ? R.color.green_700 : R.color.bmiObese);
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

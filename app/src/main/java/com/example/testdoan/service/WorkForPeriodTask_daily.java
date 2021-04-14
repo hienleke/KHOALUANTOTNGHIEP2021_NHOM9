@@ -32,8 +32,8 @@ import java.util.Map;
 
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class WorkForPeriodTask extends Worker {
-    public WorkForPeriodTask(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+public class WorkForPeriodTask_daily extends Worker {
+    public WorkForPeriodTask_daily(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
     private User u ;
@@ -46,7 +46,7 @@ public class WorkForPeriodTask extends Worker {
         u= MainActivity.user;
         db.collection("users")
                 .document(u.getId())
-                .collection("expensePeriodic").whereEqualTo("enable", true)
+                .collection("expensePeriodic").whereEqualTo("enable", true).whereEqualTo("period","daily")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

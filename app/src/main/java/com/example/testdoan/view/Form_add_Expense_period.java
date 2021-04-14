@@ -48,11 +48,12 @@ public class Form_add_Expense_period extends BottomSheetDialogFragment {
     private TextView editText_time;
     private TextView editText_category;
     private boolean type;
+    private static String period;
     double amountbefore =-1;
     boolean typeBefore;
-    DecimalFormat decimalFormat = new DecimalFormat("0.0");
+    DecimalFormat decimalFormat = new DecimalFormat("#,###.0");
     private double amount;
-int q=0;
+    int q=0;
     public Form_add_Expense_period() {
         // Required empty public constructor
     }
@@ -60,6 +61,7 @@ int q=0;
     public static Form_add_Expense_period newInstance(Bundle bundle) {
         Form_add_Expense_period fragment = new Form_add_Expense_period();
         Bundle args = new Bundle();
+
         args.putBundle("expense", bundle);
         fragment.setArguments(args);
         return fragment;
@@ -70,6 +72,7 @@ int q=0;
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             data = getArguments().getBundle("expense");
+            this.period=data.getString("period");
         }
     }
 
@@ -89,39 +92,14 @@ int q=0;
             }
         });
 
-        editText_time = v.findViewById(R.id.form_expense_time_period);
-        editText_time.setText( new SimpleDateFormat("EEE, dd/MMM/yyyy").format(Calendar.getInstance().getTime())   );
-        editText_time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR);
-                int mMonth = c.get(Calendar.MONTH);
-                int mDay = c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @RequiresApi(api = Build.VERSION_CODES.O)
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.set(year, monthOfYear, dayOfMonth);
-                                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MMM/yyyy");
-                                String strDate = format.format(calendar.getTime());
-                                editText_time.setText(strDate);
-                            }
-                        }, mYear, mMonth, mDay);
-                datePickerDialog.show();
-            }
-        });
         TextView categoryTextview =  (TextView)v.findViewById(R.id.form_expense_category_period);
         EditText amountTextview =  v.findViewById(R.id.form_expense_amount_period);
-        TextView timeTextview =  (TextView)v.findViewById(R.id.form_expense_time_period);
+
         EditText NoteTextview =  v.findViewById(R.id.form_expense_note_period);
         Button save = v.findViewById(R.id.form_expense_save_period);
         Bundle b = null;
 
-        if(data!=null)
+        if(data!=null && data.getString("id")!=null)
         {
             b = getArguments().getBundle("expense");
            q=1;
@@ -134,7 +112,7 @@ int q=0;
             categoryTextview.setEnabled(false);
             amountTextview.setText(decimalFormat.format(Double.valueOf(b.getString("amount"))));
             SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MMM/yyyy");
-            timeTextview.setText(format.format(Date.parse(b.getString("time"))));
+            period = b.getString("period");
             NoteTextview.setText(b.getString("note"));
         }
 
@@ -173,35 +151,26 @@ int q=0;
                     isclick=false;
                     return;
                 }
-                String time =timeTextview.getText().toString();
                 String note =NoteTextview.getText().toString();
                 SimpleDateFormat formatter =   new SimpleDateFormat("EEE, dd/MMM/yyyy");
-                Date date = new Date();
-                try {
-                    date = formatter.parse(time);
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                    Log.d("loi ngay", "loi ngay");
-                    isclick=false;
-                }
 
-                Timestamp timestamp = new Timestamp( date );
+
+
                 Map<String, Object> data = new HashMap<>();
                 data.put("amount", amount);
                 data.put("category", Category);
                 data.put("expen", type);
                 data.put("note", note);
-                data.put("timeCreated", timestamp);
+                data.put("timeCreated", Timestamp.now());
                 data.put("enable", q==1 ? getArguments().getBundle("expense").getBoolean("enable"):true);
+                data.put("period", period);
 
 
                 DocumentReference dff =  MainActivity.db
                         .collection("users")
                         .document(UserID)
                         .collection("expensePeriodic").document();
-                if(getArguments().getBundle("expense")!=null)
+                if(getArguments().getBundle("expense")!=null && getArguments().getBundle("expense").getString("id")!=null)
                 {
                     dff =  MainActivity.db
                             .collection("users")

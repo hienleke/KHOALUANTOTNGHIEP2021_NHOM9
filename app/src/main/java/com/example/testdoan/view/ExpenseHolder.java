@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.testdoan.R;
@@ -16,6 +17,7 @@ public class ExpenseHolder extends RecyclerView.ViewHolder {
      public TextView category;
      public TextView amount;
      public TextView expenseorIncome;
+     public ConstraintLayout iteam_background;
 
     public ExpenseHolder(@NonNull View itemView) {
         super(itemView);
@@ -24,5 +26,6 @@ public class ExpenseHolder extends RecyclerView.ViewHolder {
         amount = itemView.findViewById(R.id.iteam_amount);
         expenseorIncome = itemView.findViewById(R.id.iteam_expenseOrincome);
         remove =itemView.findViewById(R.id.iteam_delete_button);
+        iteam_background=itemView.findViewById(R.id.iteam_background_depit);
     }
 }

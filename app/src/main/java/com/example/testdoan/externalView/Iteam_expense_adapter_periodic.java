@@ -1,8 +1,11 @@
 package com.example.testdoan.externalView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.icu.text.DecimalFormat;
+import android.icu.text.DecimalFormatSymbols;
+import android.icu.util.Currency;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import androidx.core.util.Pair;
 import com.example.testdoan.R;
 
 import com.example.testdoan.model.ExpensePeriodic;
+import com.example.testdoan.view.Form_add_Expense_period;
 import com.example.testdoan.view.Form_add_expense;
 import com.example.testdoan.view.MainActivity;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -41,7 +45,7 @@ public class Iteam_expense_adapter_periodic extends FirestoreRecyclerAdapter<Exp
      *
      * @param options
      */
-    DecimalFormat decimalFormat = new DecimalFormat("0.0");
+    DecimalFormat decimalFormat = new DecimalFormat("#,###.00 ¤");
     private  SimpleDateFormat format;
     private Context context;
 
@@ -55,9 +59,11 @@ public class Iteam_expense_adapter_periodic extends FirestoreRecyclerAdapter<Exp
         super(options);
             format = new SimpleDateFormat("EEE, dd/MMM/yyyy");
             this.context = context;
+
     }
 
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onBindViewHolder(@NonNull Expense_periodicHolder holder, int position, @NonNull ExpensePeriodic model) {
         boolean expenTemp = model.isExpen();
@@ -67,6 +73,7 @@ public class Iteam_expense_adapter_periodic extends FirestoreRecyclerAdapter<Exp
         holder.expenseorIncome.setText(model.isExpen()==false ? "Income" : "Expense");
         String strDate = format.format(model.getTimeCreated().toDate());
         holder.time.setText(strDate);
+        holder.iteam_background.setBackgroundResource(model.isExpen()==false ? R.color.green_700 : R.color.bmiObese);
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +122,8 @@ public class Iteam_expense_adapter_periodic extends FirestoreRecyclerAdapter<Exp
                 b.putString("type", model.isExpen()==true ? "Income" : "Expense");
                 b.putString("note", model.getNote());
                 b.putBoolean("enable",model.isEnable());
-                BottomSheetDialogFragment fg = Form_add_expense.newInstance(b);
+                b.putString("period", model.getPeriod());
+                BottomSheetDialogFragment fg = Form_add_Expense_period.newInstance(b);
                 fg.show(((AppCompatActivity)context).getSupportFragmentManager(),"tagtag");
             }
         });

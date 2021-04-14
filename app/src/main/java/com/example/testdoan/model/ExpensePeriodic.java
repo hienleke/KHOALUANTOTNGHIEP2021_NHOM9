@@ -13,6 +13,26 @@ public class ExpensePeriodic {
     private double amount;
     private boolean expen;
     private boolean enable;
+    private String period;
+
+    public String getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(String period) {
+        this.period = period;
+    }
+
+    public ExpensePeriodic(String id, String category, Timestamp timeCreated, String note, double amount, boolean expen, boolean enable, String period) {
+        this.id = id;
+        this.category = category;
+        this.timeCreated = timeCreated;
+        this.note = note;
+        this.amount = amount;
+        this.expen = expen;
+        this.enable = enable;
+        this.period = period;
+    }
 
     public ExpensePeriodic(String id, String category, Timestamp timeCreated, String note, double amount, boolean expen, boolean enable) {
         this.id = id;

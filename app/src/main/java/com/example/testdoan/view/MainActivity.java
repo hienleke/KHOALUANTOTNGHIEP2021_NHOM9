@@ -31,7 +31,8 @@ import com.example.testdoan.externalView.HorizontalCalendarView;
 import com.example.testdoan.externalView.Tools;
 import com.example.testdoan.model.User;
 import com.example.testdoan.repository.Budgetmodify;
-import com.example.testdoan.service.WorkForPeriodTask;
+import com.example.testdoan.service.WorkForPeriodTask_daily;
+import com.example.testdoan.service.WorkForPeriodTask_monthly;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean CurrentTabisExpense =true;
     private boolean CurrentTabisReport =false;
     public static Double budget= 0.0;
-    DecimalFormat decimalFormat = new DecimalFormat("0.0");
+   DecimalFormat decimalFormat = new DecimalFormat("#,###.00 ¤");
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -92,12 +93,14 @@ public class MainActivity extends AppCompatActivity {
                 .setRequiresStorageNotLow(false)
                 .setRequiresDeviceIdle(false)
                 .build();
-        PeriodicWorkRequest photoCheckBuilder =
-                new PeriodicWorkRequest.Builder(WorkForPeriodTask.class, 1, TimeUnit.DAYS).setConstraints(constraints).build();
+        PeriodicWorkRequest Dailywork =
+                new PeriodicWorkRequest.Builder(WorkForPeriodTask_daily.class, 1, TimeUnit.DAYS).setConstraints(constraints).build();
+//        PeriodicWorkRequest monthlyWork =
+//                new PeriodicWorkRequest.Builder(WorkForPeriodTask_monthly.class, 28, TimeUnit.DAYS).setConstraints(constraints).build();
 
         WorkManager
                 .getInstance(getApplicationContext())
-                .enqueueUniquePeriodicWork("vcl", ExistingPeriodicWorkPolicy.KEEP , photoCheckBuilder);
+                .enqueueUniquePeriodicWork("xxx", ExistingPeriodicWorkPolicy.KEEP,monthlyWork;
 
 
 

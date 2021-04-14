@@ -44,6 +44,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -60,24 +61,29 @@ public class Planning extends Fragment {
 
     private ListView lv;
     private FloatingActionButton addrecurringExpense;
+    private FloatingActionButton addrecurringExpense_monthly;
     private FloatingActionButton addPlanning;
     DecimalFormat decimalFormat = new DecimalFormat("0.0");
     private Iteam_expense_adapter_periodic adapter;
     private TextView starttime;
     private double amountqqq;
+    private Iteam_expense_adapter_periodic adapter_monthly;
 
     public static Planning newInstance() {
         return new Planning();
     }
     private RecyclerView recyclerView;
+    private RecyclerView recyclerView_monthly;
     private ProgressBar progressBar2;
     private TextView endtime;
     private TextView Amount;
+    private TextView current;
 
     @Override
     public void onStart() {
         super.onStart();
         adapter.startListening();
+        adapter_monthly.startListening();
     }
 
 
@@ -88,13 +94,25 @@ public class Planning extends Fragment {
         Query query = MainActivity.db
                 .collection("users")
                 .document(MainActivity.user.getId())
-                .collection("expensePeriodic");
+                .collection("expensePeriodic").whereEqualTo("period", "daily");
 
         FirestoreRecyclerOptions<ExpensePeriodic> options = new FirestoreRecyclerOptions.Builder<com.example.testdoan.model.ExpensePeriodic>()
                 .setQuery(query, com.example.testdoan.model.ExpensePeriodic.class)
                 .build();
 
         adapter = new Iteam_expense_adapter_periodic(options,getContext());
+
+
+        Query query_monthly = MainActivity.db
+                .collection("users")
+                .document(MainActivity.user.getId())
+                .collection("expensePeriodic").whereEqualTo("period", "monthly");
+
+        FirestoreRecyclerOptions<ExpensePeriodic> optionsMonthly = new FirestoreRecyclerOptions.Builder<com.example.testdoan.model.ExpensePeriodic>()
+                .setQuery(query_monthly, com.example.testdoan.model.ExpensePeriodic.class)
+                .build();
+
+        adapter_monthly = new Iteam_expense_adapter_periodic(optionsMonthly,getContext());
 
     }
 
@@ -110,6 +128,7 @@ public class Planning extends Fragment {
         txtBudget.setText(String.valueOf(decimalFormat.format(MainActivity.budget)));
         btnSave = v.findViewById(R.id.updateBudget);
         addPlanning =v.findViewById(R.id.addPlanning);
+        current =v.findViewById(R.id.textView24);
 
         addPlanning.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,8 +143,20 @@ public class Planning extends Fragment {
         addrecurringExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                        BottomSheetDialogFragment fg = Form_add_Expense_period.newInstance(null);
+                Bundle b = new Bundle();
+                b.putString("period", "daily");
+                        BottomSheetDialogFragment fg = Form_add_Expense_period.newInstance(b);
                         fg.show(getFragmentManager(),"xxx");
+            }
+        });
+        addrecurringExpense_monthly= v.findViewById(R.id.addchitieuthuongxuyen_monthly);
+        addrecurringExpense_monthly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle b = new Bundle();
+                b.putString("period", "monthly");
+                BottomSheetDialogFragment fg = Form_add_Expense_period.newInstance(b);
+                fg.show(getFragmentManager(),"xxx");
             }
         });
 
@@ -221,7 +252,7 @@ public class Planning extends Fragment {
                                                         tong1+=doc.getDouble("amount");
                                                     }
                                                 }
-
+                                                current.setText(String.valueOf((int)tong1 - (int)tong)+".0");
                                                 progressBar2.setMax((int) amountqqq);
                                                 progressBar2.setProgress((int)(tong1-tong));
                                             }
@@ -289,9 +320,12 @@ public class Planning extends Fragment {
         // Create the observer which updates the UI.
 
 
-
+        recyclerView_monthly= v.findViewById(R.id.periodicIteam_expense_monthly);
+        recyclerView_monthly.addItemDecoration(new SpacesItemDecoration(30));
+        recyclerView_monthly.setAdapter(adapter_monthly);
+        recyclerView_monthly.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView = v.findViewById(R.id.periodicIteam_expense);
-        recyclerView.addItemDecoration(new SpacesItemDecoration(20));
+        recyclerView.addItemDecoration(new SpacesItemDecoration(30));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return v ;
@@ -307,6 +341,7 @@ public class Planning extends Fragment {
     public void onStop() {
         super.onStop();
         adapter.stopListening();
+        adapter_monthly.stopListening();
     }
 
 

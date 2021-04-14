@@ -6,6 +6,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.testdoan.R;
@@ -18,6 +19,7 @@ public class Expense_periodicHolder extends RecyclerView.ViewHolder {
      public TextView amount;
      public TextView expenseorIncome;
      public Switch switcher;
+    public ConstraintLayout iteam_background;
 
     public Expense_periodicHolder(@NonNull View itemView) {
         super(itemView);
@@ -27,5 +29,6 @@ public class Expense_periodicHolder extends RecyclerView.ViewHolder {
         expenseorIncome = itemView.findViewById(R.id.iteam_expenseOrincome_periodic);
         remove =itemView.findViewById(R.id.iteam_delete_button_periodic);
         switcher = itemView.findViewById(R.id.switch1);
+        iteam_background = itemView.findViewById(R.id.iteam_background_period);
     }
 }

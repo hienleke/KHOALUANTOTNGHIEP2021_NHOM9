@@ -74,36 +74,6 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/time_linearlayout_period"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/textinput"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:weightSum="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout_period">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".25"
-            android:text="@string/time" />
-
-        <TextView
-            android:id="@+id/form_expense_time_period"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_weight=".75"
-            android:background="@drawable/rouder_edittext"
-            android:padding="7dp" />
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout6"
@@ -118,7 +88,7 @@
         android:weightSum="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_linearlayout_period">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout_period">
 
         <TextView
             android:layout_width="0dp"

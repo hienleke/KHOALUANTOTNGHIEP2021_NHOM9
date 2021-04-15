@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,7 +27,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.testdoan.R;
 import com.example.testdoan.externalView.Iteam_expense_adapter_periodic;
+import com.example.testdoan.externalView.Iteam_planning_adapter;
 import com.example.testdoan.model.ExpensePeriodic;
+import com.example.testdoan.model.Planing;
 import com.example.testdoan.repository.Budgetmodify;
 import com.example.testdoan.viewmodel.PlanningViewModel;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -44,7 +47,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -68,12 +70,14 @@ public class Planning extends Fragment {
     private TextView starttime;
     private double amountqqq;
     private Iteam_expense_adapter_periodic adapter_monthly;
+    private Iteam_planning_adapter adapter_planning;
 
     public static Planning newInstance() {
         return new Planning();
     }
     private RecyclerView recyclerView;
     private RecyclerView recyclerView_monthly;
+    private RecyclerView recycleview_planning;
     private ProgressBar progressBar2;
     private TextView endtime;
     private TextView Amount;
@@ -84,6 +88,7 @@ public class Planning extends Fragment {
         super.onStart();
         adapter.startListening();
         adapter_monthly.startListening();
+        adapter_planning.startListening();
     }
 
 
@@ -114,21 +119,36 @@ public class Planning extends Fragment {
 
         adapter_monthly = new Iteam_expense_adapter_periodic(optionsMonthly,getContext());
 
+
+
+        Query query_planning = MainActivity.db
+                .collection("users")
+                .document(MainActivity.user.getId())
+                .collection("planning");
+
+        FirestoreRecyclerOptions<Planing> optionsPlanning = new FirestoreRecyclerOptions.Builder<com.example.testdoan.model.Planing>()
+                .setQuery(query_planning, com.example.testdoan.model.Planing.class)
+                .build();
+
+        adapter_planning = new Iteam_planning_adapter(optionsPlanning,getContext());
+
+
+
+
+
+
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.planning_fragment, container, false);
-        endtime = v.findViewById(R.id.textView17);
-        starttime = v.findViewById(R.id.textView12);
-        Amount =v.findViewById(R.id.amountExpected);
-        progressBar2 = v.findViewById(R.id.progressBar4);
         EditText txtBudget = v.findViewById(R.id.txtbudget);
         txtBudget.setText(String.valueOf(decimalFormat.format(MainActivity.budget)));
         btnSave = v.findViewById(R.id.updateBudget);
         addPlanning =v.findViewById(R.id.addPlanning);
-        current =v.findViewById(R.id.textView24);
+
+
 
         addPlanning.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,146 +200,13 @@ public class Planning extends Fragment {
             }
         });
 
-        amountqqq =0;
-        MainActivity.
-        db.collection("users").document(MainActivity.user.getId()).collection("planning").document("planning")
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w("xxx", "Listen failed.", e);
-                            return;
-                        }
-
-                        if (snapshot != null ) {
-                            Log.d("xxxbudget", "Current data: " + snapshot.getData());
-                            try {
-                                SimpleDateFormat formatter =   new SimpleDateFormat("EEE, dd/MMM/yyyy");
-                                double amount = snapshot.getDouble("amount");
-                                amountqqq=amount;
-                                Timestamp timeEnd = snapshot.getTimestamp("timeEnd");
-                                Timestamp timeStart = snapshot.getTimestamp("timeStart");
-                                starttime.setText(formatter.format(timeStart.toDate()));
-                                endtime.setText(formatter.format(timeEnd.toDate()));
-                                Amount.setText(String.valueOf(amount));
-                                Date endd = timeEnd.toDate();
-                                Date startt = timeStart.toDate();
-
-
-
-                                Calendar calendar =Calendar.getInstance();
-                                calendar.setTime(startt);
-                                int year = calendar.get(Calendar.YEAR);
-//Add one to month {0 - 11}
-                                int month = calendar.get(Calendar.MONTH) + 1;
-                                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-
-                                LocalDate localDate2begin = LocalDate.of(year,month,day);
-
-
-                                calendar.setTime(endd);
-                                 year = calendar.get(Calendar.YEAR);
-//Add one to month {0 - 11}
-                                 month = calendar.get(Calendar.MONTH) + 1;
-                                day = calendar.get(Calendar.DAY_OF_MONTH);
-                                LocalDate localDate2end = LocalDate.of(year,month,day);
-
-                                ZoneId zoneid2 = ZoneId.systemDefault();
-                                Instant instant2 = Instant.now();
-                                ZoneOffset currentOffsetForMyZone2 = zoneid2.getRules().getOffset(instant2);
-                                Date begin2 =Date.from(localDate2begin.atStartOfDay(zoneid2).toInstant());
-                                Date end2 =Date.from(localDate2end.atTime(23,59,59).toInstant(currentOffsetForMyZone2));
-
-
-                                MainActivity.db
-                                        .collection("users")
-                                        .document(MainActivity.user.getId())
-                                        .collection("expense")
-                                        .whereGreaterThanOrEqualTo("timeCreated", begin2)
-                                        .whereLessThanOrEqualTo("timeCreated",end2).get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                double tong=0;
-                                                double tong1=0;
-                                                for (QueryDocumentSnapshot doc : task.getResult()) {
-                                                    if (doc.getBoolean("expen")) {
-                                                        tong+=doc.getDouble("amount");
-                                                    }
-                                                    if (!doc.getBoolean("expen")) {
-                                                        tong1+=doc.getDouble("amount");
-                                                    }
-                                                }
-                                                current.setText(String.valueOf((int)tong1 - (int)tong)+".0");
-                                                progressBar2.setMax((int) amountqqq);
-                                                progressBar2.setProgress((int)(tong1-tong));
-                                            }
-                                        });
-
-
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.printStackTrace();
-                                starttime.setText("No planning");
-                                endtime.setText("No planning");
-                                Amount.setText("No planning");
-                            }
-
-
-
-                        } else {
-                            starttime.setText("No planning");
-                            endtime.setText("No planning");
-                            Amount.setText("No planning");
-                        }
-                    }
-                });
-
-
-
-        v.findViewById(R.id.planning_remove).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage("Do you want to delete it ?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        MainActivity.db
-                                .collection("users")
-                                .document(MainActivity.user.getId())
-                                .collection("planning").document("planning")
-                                .delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getContext(), "fail", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-
-                    }
-                })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
-            }
-        });
 
         // Create the observer which updates the UI.
 
-
+        recycleview_planning = v.findViewById(R.id.planning_recycleview);
+        recycleview_planning.addItemDecoration(new SpacesItemDecoration(30));
+        recycleview_planning.setAdapter(adapter_planning);
+        recycleview_planning.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView_monthly= v.findViewById(R.id.periodicIteam_expense_monthly);
         recyclerView_monthly.addItemDecoration(new SpacesItemDecoration(30));
         recyclerView_monthly.setAdapter(adapter_monthly);
@@ -342,6 +229,7 @@ public class Planning extends Fragment {
         super.onStop();
         adapter.stopListening();
         adapter_monthly.stopListening();
+        adapter_planning.stopListening();
     }
 
 

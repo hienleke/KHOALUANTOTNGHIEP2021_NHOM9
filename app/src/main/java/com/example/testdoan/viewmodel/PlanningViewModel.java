@@ -5,10 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.testdoan.model.Planing;
-import com.example.testdoan.view.Planning;
 
-
-import java.util.List;
 
 public class PlanningViewModel extends ViewModel {
     private MutableLiveData<Planing> users;

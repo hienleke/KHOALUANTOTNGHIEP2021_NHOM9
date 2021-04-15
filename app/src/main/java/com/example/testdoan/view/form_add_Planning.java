@@ -45,10 +45,10 @@ public class form_add_Planning extends BottomSheetDialogFragment {
     private String UserID ;
     private String mParam1;
     private TextView editText_time;
-    private TextView editText_category;
+    private EditText editText_title;
+    private TextView timefinish;
+
     private boolean type;
-    double amountbefore =-1;
-    boolean typeBefore;
     DecimalFormat decimalFormat = new DecimalFormat("0.0");
     private double amount;
     int q=0;
@@ -59,6 +59,7 @@ public class form_add_Planning extends BottomSheetDialogFragment {
     public static form_add_Planning newInstance(Bundle bundle) {
         form_add_Planning fragment = new form_add_Planning();
         Bundle args = new Bundle();
+        args.putBundle("expense",bundle);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,8 +77,9 @@ public class form_add_Planning extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_form_add__planning, container, false);
         UserID =MainActivity.user.getId();
-
-        editText_time = v.findViewById(R.id.planningtime);
+        timefinish = v.findViewById(R.id.form_planning_time_finish);
+        editText_title = v.findViewById(R.id.form_planning_title);
+        editText_time = v.findViewById(R.id.form_planningtime_start);
         editText_time.setText( new SimpleDateFormat("EEE, dd/MMM/yyyy").format(Calendar.getInstance().getTime())   );
         editText_time.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,9 +105,37 @@ public class form_add_Planning extends BottomSheetDialogFragment {
                 datePickerDialog.show();
             }
         });
+        timefinish.setText( new SimpleDateFormat("EEE, dd/MMM/yyyy").format(Calendar.getInstance().getTime())   );
+        timefinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR);
+                int mMonth = c.get(Calendar.MONTH);
+                int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.O)
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.set(year, monthOfYear, dayOfMonth);
+                                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MMM/yyyy");
+                                String strDate = format.format(calendar.getTime());
+                                editText_time.setText(strDate);
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
+
+
 
         EditText amountTextview =  v.findViewById(R.id.form_planning_amount);
-        TextView timeTextview =  (TextView)v.findViewById(R.id.planningtime);
+        TextView timeTextview =  (TextView)v.findViewById(R.id.form_planningtime_start);
+        TextView timeTextview2 =  (TextView)v.findViewById(R.id.form_planning_time_finish);
 
         Button save = v.findViewById(R.id.form_planning_save_period);
         Bundle b = null;
@@ -114,10 +144,13 @@ public class form_add_Planning extends BottomSheetDialogFragment {
         {
             b = getArguments().getBundle("expense");
             q=1;
+            EditText title = v.findViewById(R.id.form_planning_title);
+            title.setText(b.getString("title"));
             mParam1=b.getString("id");
             amountTextview.setText(decimalFormat.format(Double.valueOf(b.getString("amount"))));
             SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MMM/yyyy");
-            timeTextview.setText(format.format(Date.parse(b.getString("time"))));
+            timeTextview.setText(format.format(Date.parse(b.getString("startTime"))));
+            timeTextview2.setText(format.format(Date.parse(b.getString("endTime"))));
         }
 
 
@@ -129,8 +162,9 @@ public class form_add_Planning extends BottomSheetDialogFragment {
                     return;
                 isclick=true;
                 amount = 0;
+
                 try {
-                    amount = Double.valueOf(amountTextview.getText().toString().replace(",", "."));
+                    amount = Double.valueOf(amountTextview.getText().toString().split(",")[0]);
                     if(amount==0)
                     {
                         amountTextview.requestFocus();
@@ -153,10 +187,13 @@ public class form_add_Planning extends BottomSheetDialogFragment {
                     return;
                 }
                 String time =timeTextview.getText().toString();
+                String timefinish = timeTextview2.getText().toString();
                 SimpleDateFormat formatter =   new SimpleDateFormat("EEE, dd/MMM/yyyy");
                 Date date = new Date();
+                Date date2 = new Date();
                 try {
                     date = formatter.parse(time);
+                    date2 =formatter.parse(timefinish);
                 }
                 catch (Exception e)
                 {
@@ -164,17 +201,27 @@ public class form_add_Planning extends BottomSheetDialogFragment {
                     Log.d("loi ngay", "loi ngay");
                     isclick=false;
                 }
-
+                String name = editText_title.getText().toString();
                 Timestamp timestamp = new Timestamp( date );
+                Timestamp timestamp2 = new Timestamp( date2 );
                 Map<String, Object> data = new HashMap<>();
                 data.put("amount", amount);
-                data.put("timeEnd", timestamp);
-                data.put("timeStart", Timestamp.now());
+                data.put("timeEnd", timestamp2);
+                data.put("timeStart", timestamp);
+                data.put("title", name);
 
                 DocumentReference dff =  MainActivity.db
                         .collection("users")
                         .document(UserID)
-                        .collection("planning").document("planning");
+                        .collection("planning").document();
+
+                if(getArguments()!=null)
+                {
+                    dff =  MainActivity.db
+                            .collection("users")
+                            .document(UserID)
+                            .collection("planning").document(mParam1);
+                }
 
                 dff.set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

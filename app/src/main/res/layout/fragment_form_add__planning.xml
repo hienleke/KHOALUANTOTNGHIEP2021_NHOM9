@@ -14,17 +14,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:background="@drawable/textinput"
         android:orientation="horizontal"
         android:padding="10dp"
         android:weightSum="1"
-        app:layout_constraintBottom_toTopOf="@+id/time_linearlayout_period"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
 
         <TextView
             android:layout_width="0dp"
@@ -50,16 +48,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="30dp"
         android:background="@drawable/textinput"
         android:orientation="horizontal"
         android:padding="10dp"
         android:weightSum="1"
-        app:layout_constraintBottom_toTopOf="@+id/form_planning_save_period"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout_period">
 
@@ -67,10 +62,73 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".25"
-            android:text="@string/time" />
+            android:text="Start" />
 
         <TextView
-            android:id="@+id/planningtime"
+            android:id="@+id/form_planningtime_start"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight=".75"
+            android:background="@drawable/rouder_edittext"
+            android:padding="7dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/textinput"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time_linearlayout_period">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".25"
+            android:text="Finish" />
+
+        <TextView
+            android:id="@+id/form_planning_time_finish"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight=".75"
+            android:background="@drawable/rouder_edittext"
+            android:padding="7dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout8"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/textinput"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".25"
+            android:text="Name" />
+
+        <EditText
+            android:id="@+id/form_planning_title"
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
@@ -84,16 +142,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/button_pattern"
         android:text="Save"
         android:textColor="#F3EFEF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_linearlayout_period" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

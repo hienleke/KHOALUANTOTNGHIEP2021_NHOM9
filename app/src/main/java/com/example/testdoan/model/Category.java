@@ -9,6 +9,7 @@ public class Category {
     private String name;
     private String note;
     private boolean expen;
+    User hh;
 
     public Category() {
     }

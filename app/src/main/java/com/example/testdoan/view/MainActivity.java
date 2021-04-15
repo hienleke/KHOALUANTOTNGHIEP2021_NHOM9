@@ -31,8 +31,8 @@ import com.example.testdoan.externalView.HorizontalCalendarView;
 import com.example.testdoan.externalView.Tools;
 import com.example.testdoan.model.User;
 import com.example.testdoan.repository.Budgetmodify;
-import com.example.testdoan.service.WorkForPeriodTask_daily;
-import com.example.testdoan.service.WorkForPeriodTask_monthly;
+import com.example.testdoan.service.WorkForPeriodTask_daily_monthly;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -94,13 +94,11 @@ public class MainActivity extends AppCompatActivity {
                 .setRequiresDeviceIdle(false)
                 .build();
         PeriodicWorkRequest Dailywork =
-                new PeriodicWorkRequest.Builder(WorkForPeriodTask_daily.class, 1, TimeUnit.DAYS).setConstraints(constraints).build();
-//        PeriodicWorkRequest monthlyWork =
-//                new PeriodicWorkRequest.Builder(WorkForPeriodTask_monthly.class, 28, TimeUnit.DAYS).setConstraints(constraints).build();
+                new PeriodicWorkRequest.Builder(WorkForPeriodTask_daily_monthly.class, 1, TimeUnit.DAYS).setConstraints(constraints).build();
 
         WorkManager
                 .getInstance(getApplicationContext())
-                .enqueueUniquePeriodicWork("xxx", ExistingPeriodicWorkPolicy.KEEP,monthlyWork;
+                .enqueueUniquePeriodicWork("xxx", ExistingPeriodicWorkPolicy.KEEP,Dailywork);
 
 
 

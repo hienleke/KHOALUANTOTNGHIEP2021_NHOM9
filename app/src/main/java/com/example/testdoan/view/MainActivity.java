@@ -32,8 +32,8 @@ import com.example.testdoan.externalView.Tools;
 import com.example.testdoan.model.User;
 import com.example.testdoan.repository.Budgetmodify;
 import com.example.testdoan.service.WorkForPeriodTask_daily_monthly;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements getdataFromFragment {
 
     private FrameLayout container;
     private ActionBar actionBar;
@@ -283,12 +283,35 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 break;
+            case R.id.optionmenu_period:
+              BottomSheetDialogFragment fg = form_period.newInstance(null);
+                fg.show(getSupportFragmentManager(),"Xsdf");
+
+                break;
         }
         return true;
 
 
     }
-
+    @Override
+    public void onlicknext(Date from, Date end) {
+        modeCurrent="period";
+        calendarView.setUpCalendar("period",from.getTime(),
+                end.getTime(),
+                datesToBeColored,
+                new HorizontalCalendarView.OnCalendarListener() {
+                    @Override
+                    public void onDateSelected(String date) {
+                        timeCurrent=date;
+                        Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        if(CurrentTabisExpense)
+                            fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
+                        if(CurrentTabisReport)
+                            fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(modeCurrent,timeCurrent),"ReportFragment").commit();
+                    }
+                });
+    }
     void handleNavigation()
     {
         mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -343,4 +366,131 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
     }
+
+    public FrameLayout getContainer() {
+        return container;
+    }
+
+    public void setContainer(FrameLayout container) {
+        this.container = container;
+    }
+
+
+    public void setActionBar(ActionBar actionBar) {
+        this.actionBar = actionBar;
+    }
+
+    public HorizontalCalendarView getCalendarView() {
+        return calendarView;
+    }
+
+    public void setCalendarView(HorizontalCalendarView calendarView) {
+        this.calendarView = calendarView;
+    }
+
+    public BottomNavigationView.OnNavigationItemSelectedListener getmOnNavigationItemSelectedListener() {
+        return mOnNavigationItemSelectedListener;
+    }
+
+    public void setmOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener) {
+        this.mOnNavigationItemSelectedListener = mOnNavigationItemSelectedListener;
+    }
+
+    public BottomNavigationView getBottomNavigationView() {
+        return bottomNavigationView;
+    }
+
+    public void setBottomNavigationView(BottomNavigationView bottomNavigationView) {
+        this.bottomNavigationView = bottomNavigationView;
+    }
+
+    public ArrayList getDatesToBeColored() {
+        return datesToBeColored;
+    }
+
+    public void setDatesToBeColored(ArrayList datesToBeColored) {
+        this.datesToBeColored = datesToBeColored;
+    }
+
+    public Calendar getStarttime() {
+        return starttime;
+    }
+
+    public void setStarttime(Calendar starttime) {
+        this.starttime = starttime;
+    }
+
+    public Calendar getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Calendar endtime) {
+        this.endtime = endtime;
+    }
+
+    public static User getUser() {
+        return user;
+    }
+
+    public static void setUser(User user) {
+        MainActivity.user = user;
+    }
+
+    public static FirebaseFirestore getDb() {
+        return db;
+    }
+
+    public static void setDb(FirebaseFirestore db) {
+        MainActivity.db = db;
+    }
+
+    public String getModeCurrent() {
+        return modeCurrent;
+    }
+
+    public void setModeCurrent(String modeCurrent) {
+        this.modeCurrent = modeCurrent;
+    }
+
+    public String getTimeCurrent() {
+        return timeCurrent;
+    }
+
+    public void setTimeCurrent(String timeCurrent) {
+        this.timeCurrent = timeCurrent;
+    }
+
+    public boolean isCurrentTabisExpense() {
+        return CurrentTabisExpense;
+    }
+
+    public void setCurrentTabisExpense(boolean currentTabisExpense) {
+        CurrentTabisExpense = currentTabisExpense;
+    }
+
+    public boolean isCurrentTabisReport() {
+        return CurrentTabisReport;
+    }
+
+    public void setCurrentTabisReport(boolean currentTabisReport) {
+        CurrentTabisReport = currentTabisReport;
+    }
+
+    public static Double getBudget() {
+        return budget;
+    }
+
+    public static void setBudget(Double budget) {
+        MainActivity.budget = budget;
+    }
+
+    public DecimalFormat getDecimalFormat() {
+        return decimalFormat;
+    }
+
+    public void setDecimalFormat(DecimalFormat decimalFormat) {
+        this.decimalFormat = decimalFormat;
+    }
+
+
 }

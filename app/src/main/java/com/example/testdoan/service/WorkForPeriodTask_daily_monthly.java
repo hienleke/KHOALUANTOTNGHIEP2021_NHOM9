@@ -46,6 +46,9 @@ public class WorkForPeriodTask_daily_monthly extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+
+
+
         FirebaseFirestore db = MainActivity.db;
         List<ExpensePeriodic> cities = new ArrayList<>();
         u= MainActivity.user;

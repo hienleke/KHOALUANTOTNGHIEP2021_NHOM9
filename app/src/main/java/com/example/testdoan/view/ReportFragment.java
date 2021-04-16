@@ -180,6 +180,26 @@ public class ReportFragment extends Fragment {
 
 
                 break;
+
+            case "period":
+                time2begin = time.split("-")[0] ;
+                time2end = time.split("-")[1];
+                day2begin = Integer.valueOf(time2begin.split("/")[0]);
+                month2begin = Integer.valueOf(time2begin.split("/")[1]);
+                year2begin = Integer.valueOf(time2begin.split("/")[2]);
+                day2end = Integer.valueOf(time2end.split("/")[0]);
+                month2end = Integer.valueOf(time2end.split("/")[1]);
+                year2end = Integer.valueOf(time2end.split("/")[2]);
+                localDate2begin = LocalDate.of(year2begin, month2begin,day2begin);
+                localDate2end = LocalDate.of(year2end, month2end,day2end);
+                zoneid2 = ZoneId.systemDefault();
+                instant2 = Instant.now();
+                currentOffsetForMyZone2 = zoneid2.getRules().getOffset(instant2);
+                begin2 =Date.from(localDate2begin.atStartOfDay(zoneid2).toInstant());
+                end2 =Date.from(localDate2end.atTime(23,59,59).toInstant(currentOffsetForMyZone2));
+                query = query.whereGreaterThanOrEqualTo("timeCreated", begin2).whereLessThanOrEqualTo("timeCreated",end2);
+                getdataforChart(query);
+                break;
         }
         return v;
     }
@@ -324,7 +344,7 @@ public class ReportFragment extends Fragment {
         ArrayList<BarEntry> barEntriesExpense = new ArrayList<>();
         switch (mode) {
             case "date":
-                barChart.getDescription().setText("Day in week");
+                barChart.getDescription().setText("Day in this week");
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(time);
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -472,7 +492,7 @@ public class ReportFragment extends Fragment {
                 return;
 
             case "month":
-                barChart.getDescription().setText("Day in month");
+                barChart.getDescription().setText("Day in this month");
                 calendar = Calendar.getInstance();
                 calendar.setTime(time);
                 instant = Instant.now();
@@ -548,7 +568,7 @@ public class ReportFragment extends Fragment {
                 });
                 break;
             case "year":
-                barChart.getDescription().setText("Month in year");
+                barChart.getDescription().setText("Month in this year");
                 int year2begin = Integer.valueOf(year);
                 LocalDate localDate2begin = LocalDate.of(year2begin, 1, 1);
                 LocalDate localDate2end = LocalDate.of(year2begin, 12, 31);

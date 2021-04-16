@@ -8,4 +8,6 @@
         android:title="Month"/>
     <item  android:id="@+id/optionmenu_byyear"
         android:title="Year" />
+    <item  android:id="@+id/optionmenu_period"
+        android:title="Period" />
 </menu>

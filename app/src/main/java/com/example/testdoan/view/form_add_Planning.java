@@ -124,7 +124,7 @@ public class form_add_Planning extends BottomSheetDialogFragment {
                                 calendar.set(year, monthOfYear, dayOfMonth);
                                 SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MMM/yyyy");
                                 String strDate = format.format(calendar.getTime());
-                                editText_time.setText(strDate);
+                                timefinish.setText(strDate);
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -202,6 +202,31 @@ public class form_add_Planning extends BottomSheetDialogFragment {
                     isclick=false;
                 }
                 String name = editText_title.getText().toString();
+                if(name.equals(""))
+                {
+                    editText_title.requestFocus();
+                    YoYo.with(Techniques.Tada)
+                            .duration(300)
+                            .repeat(2)
+                            .playOn(editText_title);
+                    isclick=false;
+                    return;
+                }
+                if(date2.before(date))
+                {
+                    timeTextview2.requestFocus();
+                    YoYo.with(Techniques.Tada)
+                            .duration(300)
+                            .repeat(2)
+                            .playOn(timeTextview2);
+                    YoYo.with(Techniques.Tada)
+                            .duration(300)
+                            .repeat(2)
+                            .playOn(timeTextview);
+                    isclick=false;
+                    return;
+                }
+
                 Timestamp timestamp = new Timestamp( date );
                 Timestamp timestamp2 = new Timestamp( date2 );
                 Map<String, Object> data = new HashMap<>();
@@ -215,7 +240,7 @@ public class form_add_Planning extends BottomSheetDialogFragment {
                         .document(UserID)
                         .collection("planning").document();
 
-                if(getArguments()!=null)
+                if(mParam1!=null)
                 {
                     dff =  MainActivity.db
                             .collection("users")

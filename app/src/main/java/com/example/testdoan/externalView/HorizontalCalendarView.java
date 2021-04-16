@@ -17,13 +17,11 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-
 import com.example.testdoan.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 
 
 public class HorizontalCalendarView extends LinearLayout {
@@ -118,6 +116,9 @@ public class HorizontalCalendarView extends LinearLayout {
                 start-=10;
                 end+=10;
                 break;
+            case "period":
+                modeHandler=Calendar.DATE;
+                break;
         }
 
         Calendar c = Calendar.getInstance();
@@ -179,10 +180,26 @@ public class HorizontalCalendarView extends LinearLayout {
                     }
                     list.add(model3);
                     break;
+                case "period":
+                  break;
+
             }
             current = c1.getTimeInMillis();
             i++;
         }
+        if(mode=="period") {
+            Calendar c2 = Calendar.getInstance();
+            c2.setTimeInMillis(start);
+
+            String tam = c2.get(Calendar.DATE)+"/"+(c2.get(Calendar.MONTH)+1+"/"+(c2.get(Calendar.YEAR)));
+            c2.setTimeInMillis(end);
+
+            tam+="-" + c2.get(Calendar.DATE)+"/"+(c2.get(Calendar.MONTH)+1+"/"+(c2.get(Calendar.YEAR)));
+            HorizontalCalendarModel model4 = new HorizontalCalendarModel(String.valueOf(tam));
+            model4.setStatus(1);
+            list.add(model4);
+        }
+
 
         HorizontalCalendarAdapterDate adapter = new HorizontalCalendarAdapterDate(list,context);
         adapter.setOnCalendarListener(onCalendarListener);
@@ -195,6 +212,9 @@ public class HorizontalCalendarView extends LinearLayout {
 
         HorizontalCalendarAdapterYear adapterYear = new HorizontalCalendarAdapterYear(list,context);
         adapterYear.setOnCalendarListener(onCalendarListener);
+
+        HorizontalCalendarAdapterYear adapterPeriod = new HorizontalCalendarAdapterYear(list,context);
+        adapterPeriod.setOnCalendarListener(onCalendarListener);
 
 
 
@@ -215,6 +235,11 @@ public class HorizontalCalendarView extends LinearLayout {
                 recyclerView.setAdapter(adapterYear);
                 adapterYear.notifyDataSetChanged();
                 break;
+            case "period":
+                recyclerView.setAdapter(adapterPeriod);
+                adapterPeriod.notifyDataSetChanged();
+                break;
+
         }
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false);
         SnapHelper snapHelper = new PagerSnapHelper();
@@ -222,14 +247,17 @@ public class HorizontalCalendarView extends LinearLayout {
         recyclerView.setOnFlingListener(null);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.smoothScrollToPosition(pos);
+
         recyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                View view = recyclerView.getLayoutManager().findViewByPosition(pos);
-                view.performClick();
+                View view;
+                   view = recyclerView.getLayoutManager().findViewByPosition(pos);
+               view.performClick();
 
-            }
-        },200);
+                }
+
+        },700);
 
 
 

@@ -41,7 +41,7 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="350dp"
                 android:background="#FFFFFF"
                 android:backgroundTint="#FFFFFF"
                 app:cardBackgroundColor="@color/background"
@@ -217,7 +217,7 @@
                 <EditText
                     android:id="@+id/txtbudget"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:backgroundTint="#FAF3F3"
                     android:drawablePadding="16dp"
                     android:fontFamily="@font/calibri"
@@ -243,7 +243,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/button_pattern"
-                android:text="UPDATE YOUR BUDGET"
+                android:text="MODIFY YOUR BUDGET"
                 android:textColor="#F3EFEF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

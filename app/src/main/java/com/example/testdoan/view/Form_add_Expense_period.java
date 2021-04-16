@@ -1,16 +1,13 @@
 package com.example.testdoan.view;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,8 +28,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.SetOptions;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +46,7 @@ public class Form_add_Expense_period extends BottomSheetDialogFragment {
     private static String period;
     double amountbefore =-1;
     boolean typeBefore;
-    DecimalFormat decimalFormat = new DecimalFormat("#,###.0");
+    DecimalFormat decimalFormat = new DecimalFormat("##.0");
     private double amount;
     int q=0;
     public Form_add_Expense_period() {

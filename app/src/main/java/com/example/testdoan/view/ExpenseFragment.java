@@ -141,6 +141,24 @@ public class ExpenseFragment extends Fragment {
                 end2 =Date.from(localDate2end.atTime(23,59,59).toInstant(currentOffsetForMyZone2));
                 query = query.whereGreaterThanOrEqualTo("timeCreated", begin2).whereLessThanOrEqualTo("timeCreated",end2);
                 break;
+            case "period":
+                 time2begin = time.split("-")[0] ;
+                 time2end = time.split("-")[1];
+                 day2begin = Integer.valueOf(time2begin.split("/")[0]);
+                 month2begin = Integer.valueOf(time2begin.split("/")[1]);
+                 year2begin = Integer.valueOf(time2begin.split("/")[2]);
+                 day2end = Integer.valueOf(time2end.split("/")[0]);
+                 month2end = Integer.valueOf(time2end.split("/")[1]);
+                year2end = Integer.valueOf(time2end.split("/")[2]);
+                 localDate2begin = LocalDate.of(year2begin, month2begin,day2begin);
+                 localDate2end = LocalDate.of(year2end, month2end,day2end);
+                 zoneid2 = ZoneId.systemDefault();
+                instant2 = Instant.now();
+                currentOffsetForMyZone2 = zoneid2.getRules().getOffset(instant2);
+                 begin2 =Date.from(localDate2begin.atStartOfDay(zoneid2).toInstant());
+                 end2 =Date.from(localDate2end.atTime(23,59,59).toInstant(currentOffsetForMyZone2));
+                query = query.whereGreaterThanOrEqualTo("timeCreated", begin2).whereLessThanOrEqualTo("timeCreated",end2);
+                break;
         }
 
 

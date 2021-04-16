@@ -7,9 +7,12 @@ import android.icu.text.DecimalFormat;
 import android.icu.text.DecimalFormatSymbols;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,21 +21,33 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.testdoan.R;
-import com.example.testdoan.model.Expense;
 import com.example.testdoan.model.Planing;
-import com.example.testdoan.repository.Budgetmodify;
-import com.example.testdoan.view.ExpenseHolder;
-import com.example.testdoan.view.Form_add_expense;
 import com.example.testdoan.view.MainActivity;
 import com.example.testdoan.view.Planning_Holder;
 import com.example.testdoan.view.form_add_Planning;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.annotation.Nullable;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Planning_Holder> {
@@ -54,17 +69,19 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
         decimalFormat.setDecimalFormatSymbols(symbols);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onBindViewHolder(@NonNull Planning_Holder holder, int position, @NonNull Planing model) {
 
-        holder.current.setText(String.valueOf(decimalFormat.format(model.getCurrent())));
         holder.target.setText(String.valueOf(decimalFormat.format(model.getAmount())));
         holder.title.setText(model.getTitle());
         holder.starttime.setText(format.format(model.getTimeStart().toDate()));
         holder.endtime.setText(format.format(model.getTimeEnd().toDate()));
-
-
+        holder.current.setText(String.valueOf(decimalFormat.format(model.getCurrent())));
+        holder.progressBar2.setMax((int) model.getAmount());
+        if(holder!=null)
+        setprocess(holder.progressBar2,holder.current,model.getTimeStart(),model.getTimeEnd(),model.getId());
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,5 +141,82 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
                 .inflate(R.layout.savingplanning_iteam, parent, false);
 
         return new Planning_Holder(view);
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void setprocess(ProgressBar v, TextView current, Timestamp start, Timestamp end, String id)
+    {
+        MainActivity.
+                db.collection("users").document(MainActivity.user.getId()).collection("planning").document(id)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("xxx", "Listen failed.", e);
+                            return;
+                        }
+
+                        if (snapshot != null && snapshot.exists()) {
+                            Log.d("xxxbudget", "Current data: " + snapshot.getData());
+
+                            SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MMM/yyyy");
+                            double amount = snapshot.getDouble("amount");
+                            Timestamp timeEnd = snapshot.getTimestamp("timeEnd");
+                            Timestamp timeStart = snapshot.getTimestamp("timeStart");
+                            Date endd = timeEnd.toDate();
+                            Date startt = timeStart.toDate();
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(start.toDate());
+                            int year = calendar.get(Calendar.YEAR);
+//Add one to month {0 - 11}
+                            int month = calendar.get(Calendar.MONTH) + 1;
+                            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                            LocalDate localDate2begin = LocalDate.of(year, month, day);
+
+                            calendar.setTime(end.toDate());
+                            year = calendar.get(Calendar.YEAR);
+//Add one to month {0 - 11}
+                            month = calendar.get(Calendar.MONTH) + 1;
+                            day = calendar.get(Calendar.DAY_OF_MONTH);
+                            LocalDate localDate2end = LocalDate.of(year, month, day);
+
+                            ZoneId zoneid2 = ZoneId.systemDefault();
+                            Instant instant2 = Instant.now();
+                            ZoneOffset currentOffsetForMyZone2 = zoneid2.getRules().getOffset(instant2);
+                            Date begin2 = Date.from(localDate2begin.atStartOfDay(zoneid2).toInstant());
+                            Date end2 = Date.from(localDate2end.atTime(23, 59, 59).toInstant(currentOffsetForMyZone2));
+
+
+                            MainActivity.db
+                                    .collection("users")
+                                    .document(MainActivity.user.getId())
+                                    .collection("expense")
+                                    .whereGreaterThanOrEqualTo("timeCreated", begin2)
+                                    .whereLessThanOrEqualTo("timeCreated", end2).get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            double tong = 0;
+                                            double tong1 = 0;
+                                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                                if (doc.getBoolean("expen")) {
+                                                    tong += doc.getDouble("amount");
+                                                }
+                                                else{
+                                                    tong1 += doc.getDouble("amount");
+                                                }
+                                            }
+                                            int x = (int) tong1 - (int) tong;
+                                            v.setProgress(x,true);
+
+                                            current.setText(decimalFormat.format(x));
+                                        }
+                                    });
+                        }
+                    }
+                });
+
+
+
     }
 }

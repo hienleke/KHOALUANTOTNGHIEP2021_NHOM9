@@ -2,6 +2,7 @@ package com.example.testdoan.view;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ public class Planning_Holder extends RecyclerView.ViewHolder {
      public TextView current;
      public ImageView edit;
      public ImageView remove;
+    public ProgressBar progressBar2;
 
 
     public Planning_Holder(@NonNull View itemView) {
@@ -30,6 +32,7 @@ public class Planning_Holder extends RecyclerView.ViewHolder {
         target = itemView.findViewById(R.id.iteam_planning_target);
         remove = itemView.findViewById(R.id.planning_remove);
         current = itemView.findViewById(R.id.iteam_planning_current);
+        progressBar2 = itemView.findViewById(R.id.iteam_processbar_planning);
 
     }
 }

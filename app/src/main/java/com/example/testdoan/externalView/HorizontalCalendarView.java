@@ -151,13 +151,15 @@ public class HorizontalCalendarView extends LinearLayout {
                     String tam = c1.get(Calendar.DATE)+"/"+(c1.get(Calendar.MONTH)+1+"/"+(c1.get(Calendar.YEAR)));
                     c1.add(Calendar.DATE, 6);
                     tam+="-" + c1.get(Calendar.DATE)+"/"+(c1.get(Calendar.MONTH)+1+"/"+(c1.get(Calendar.YEAR)));
-                    kq = c1.getTimeInMillis() > vcl  ? true :  false;
-                    c1.add(Calendar.DATE, -6);
+                    kq = c1.getTimeInMillis() >= vcl   ? true :  false;
+                     c1.add(Calendar.DATE, -6);
                     HorizontalCalendarModel model1 = new HorizontalCalendarModel(tam);
                     if(kq && !list.stream().anyMatch(model2-> model2.getStatus()==1))
                     {
+
                         pos=i;
                         model1.setStatus(1);
+
                     }
                     list.add(model1);
                     break;

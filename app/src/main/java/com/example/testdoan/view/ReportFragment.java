@@ -1,12 +1,14 @@
 package com.example.testdoan.view;
 
 import android.graphics.Color;
+import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,6 +52,7 @@ import java.util.Map;
 import java.util.Set;
 
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class ReportFragment extends Fragment {
 
     private ReportViewModel mViewModel;
@@ -64,6 +67,11 @@ public class ReportFragment extends Fragment {
     private String USERID;
     private  Query query;
     int[] colors;
+    private double Totalincome=0;
+    private double TotalExpense=0;
+    private double Total;
+    private TextView report_income,report_expense,report_total;
+    DecimalFormat decimalFormat = new DecimalFormat("#,###.00 ¤");
 
 
     public static ReportFragment newInstance(String mode, String time) {
@@ -106,6 +114,9 @@ public class ReportFragment extends Fragment {
         barChart = v.findViewById(R.id.chartBar);
         expenseChart = v.findViewById(R.id.chartExpense);
         expenseChart.setTouchEnabled(true);
+        report_expense=v.findViewById(R.id.report_expense);
+        report_income=v.findViewById(R.id.report_income);
+        report_total=v.findViewById(R.id.report_total);
 
          query = MainActivity.db
                 .collection("users")
@@ -204,11 +215,14 @@ public class ReportFragment extends Fragment {
         return v;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     void handlerIncomeChart(List<Expense> data) {
+        Totalincome=0.0;
         if (data.size() == 0)
             return;
         Map<String, Double> typeAmountMap = new HashMap<>();
         for (Expense e : data) {
+            Totalincome+=e.getAmount();
             if (typeAmountMap.containsKey(e.getCategory()))
                 typeAmountMap.put(e.getCategory(), typeAmountMap.get(e.getCategory()) + e.getAmount());
             else
@@ -217,7 +231,7 @@ public class ReportFragment extends Fragment {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "Category";
 
-
+        report_income.setText("Income: "+decimalFormat.format(Totalincome));
 
         //input data and fit data into pie chart entry
         Set<String> local = typeAmountMap.keySet();
@@ -260,16 +274,20 @@ public class ReportFragment extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     void handlerExpenseChart(List<Expense> data) {
+        TotalExpense=0.0;
         if (data.size() == 0)
             return;
         Map<String, Double> typeAmountMap = new HashMap<>();
         for (Expense e : data) {
+            TotalExpense+=e.getAmount();
             if (typeAmountMap.containsKey(e.getCategory()))
                 typeAmountMap.put(e.getCategory(), typeAmountMap.get(e.getCategory()) + e.getAmount());
             else
                 typeAmountMap.put(e.getCategory(), e.getAmount());
         }
+        report_expense.setText("Expense: "+decimalFormat.format(TotalExpense));
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "Category";
 
@@ -306,6 +324,7 @@ public class ReportFragment extends Fragment {
 
     void getdataforChart(Query query) {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -322,6 +341,7 @@ public class ReportFragment extends Fragment {
                 }
                 handlerIncomeChart(incomes);
                 handlerExpenseChart(expenses);
+                report_total.setText("Total : "+ decimalFormat.format(Totalincome-TotalExpense));
             }
         });
     }

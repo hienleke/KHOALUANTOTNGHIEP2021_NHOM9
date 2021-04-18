@@ -21,6 +21,30 @@
             android:orientation="vertical"
             android:padding="20dp">
 
+            <TextView
+                android:id="@+id/report_income"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gotham"
+                android:text="Income: "
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/report_expense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gotham"
+                android:text="Expense :"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/report_total"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gotham"
+                android:text="Total :"
+                android:textSize="20sp" />
+
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chartBar"

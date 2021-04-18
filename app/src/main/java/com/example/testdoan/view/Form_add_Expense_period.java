@@ -133,6 +133,17 @@ public class Form_add_Expense_period extends BottomSheetDialogFragment {
                         isclick=false;
                         return;
                     }
+                    if(Category.equalsIgnoreCase("None"))
+                    {
+
+                        //categoryTextview.requestFocus();
+                        YoYo.with(Techniques.Tada)
+                                .duration(300)
+                                .repeat(2)
+                                .playOn(categoryTextview);
+                        isclick=false;
+                        return;
+                    }
 
 
                 }

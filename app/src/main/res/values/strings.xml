@@ -8,6 +8,7 @@
     <string name="time">Time</string>
     <string name="category">Category</string>
     <string name="money">Amount</string>
+    <string name="target">Target</string>
     <string name="income">+ Income</string>
     <string name="expense">+ Expense</string>
     <string name="taikhoan">taikhoan</string>

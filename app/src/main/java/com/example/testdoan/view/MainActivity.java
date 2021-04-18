@@ -1,6 +1,10 @@
 package com.example.testdoan.view;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.icu.text.DecimalFormat;
 import android.os.Build;
@@ -10,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -19,6 +24,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -32,8 +39,10 @@ import com.example.testdoan.externalView.Tools;
 import com.example.testdoan.model.User;
 import com.example.testdoan.repository.Budgetmodify;
 import com.example.testdoan.service.WorkForPeriodTask_daily_monthly;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.database.collection.LLRBNode;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,12 +52,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class MainActivity extends AppCompatActivity implements getdataFromFragment {
 
+    private static final String CHANNEL_ID ="budgetnotice" ;
     private FrameLayout container;
     private ActionBar actionBar;
     private HorizontalCalendarView calendarView;
@@ -63,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
     private boolean CurrentTabisExpense =true;
     private boolean CurrentTabisReport =false;
     public static Double budget= 0.0;
+    public static double limit =0;
+    public static boolean isNoticeenable;
    DecimalFormat decimalFormat = new DecimalFormat("#,###.00 ¤");
 
 
@@ -101,9 +115,56 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                 .enqueueUniquePeriodicWork("xxx", ExistingPeriodicWorkPolicy.KEEP,Dailywork);
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            MainActivity.db
+                    .collection("users")
+                    .document(MainActivity.user.getId()).collection("profile").document("profile")
+                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                            if (error != null) {
+                                Log.w("xxx", "Listen failed.", error);
+                                return;
+                            }
+
+                            if (value.getDouble("limit")!=null && value.getBoolean("notice") !=null) {
+                                limit = value.getDouble("limit");
+                                isNoticeenable=value.getBoolean("notice");
+                            }
+                            else
+                            {
+                                Map<String,Object> data = new HashMap<>();
+                                data.put("budget",0.0);
+                                data.put("notice",true);
+                                data.put("limit",0.0);
+
+                                MainActivity.db.collection("users").document( user.getId())
+                                        .collection("profile").document("profile")
+                                        .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getApplicationContext(), "succes", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        }
+                    });
 
 
-        db.collection("users").document(user.getId())
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        db.collection("users").document(user.getId()).collection("profile").document("profile")
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
@@ -117,7 +178,36 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                             budget=snapshot.getDouble("budget");
                             actionBar = getSupportActionBar();
                             actionBar.setTitle("Budget: "+ (budget==null ? "0" : decimalFormat.format(budget)));
+                         //   if(findViewById(R.id.txt_limit)!=null)
+                            {
 
+                                try {
+                                   // Double b= Double.valueOf(editText.toString());
+                                    if(budget<limit && isNoticeenable)
+                                    {
+                                        createNotificationChannel();
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                                                intent, PendingIntent.FLAG_ONE_SHOT);
+
+                                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                                                .setSmallIcon(android.R.drawable.stat_sys_warning)
+                                                .setContentTitle("Manage Money Warning")
+                                                .setContentText("Your budget too low")
+                                                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                                                .setPriority(NotificationCompat.PRIORITY_MAX);
+
+                                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+                                        notificationManager.notify(2, builder.build());
+                                    }
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    ex.printStackTrace();
+                                }
+
+                            }
                             if(budget==null)
                             {
                                 Budgetmodify.init(0);
@@ -492,5 +582,23 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
         this.decimalFormat = decimalFormat;
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Notice";
+            String description = "Your budget too low";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.enableVibration(true);
+            channel.setDescription(description);
+            channel.setShowBadge(true);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
 }

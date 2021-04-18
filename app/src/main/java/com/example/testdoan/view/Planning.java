@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,7 +128,34 @@ public class Planning extends Fragment {
         txtBudget.setText(String.valueOf(decimalFormat.format(MainActivity.budget)));
         btnSave = v.findViewById(R.id.updateBudget);
         addPlanning =v.findViewById(R.id.addPlanning);
+        EditText limit = v.findViewById(R.id.txt_limit);
+        limit.setText(String.valueOf(MainActivity.limit));
 
+        limit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+               double tam= MainActivity.limit;
+               double tam2= 0;
+                try {
+                    tam2 = Double.valueOf(limit.getText().toString());
+                    Budgetmodify.savelimit(tam2);
+                }
+                catch (Exception xcs)
+                {
+                    MainActivity.limit=tam;
+                }
+            }
+        });
 
 
         addPlanning.setOnClickListener(new View.OnClickListener() {

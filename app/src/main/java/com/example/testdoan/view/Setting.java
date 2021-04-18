@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.testdoan.R;
+import com.example.testdoan.repository.Budgetmodify;
 import com.example.testdoan.viewmodel.SettingViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,6 +36,7 @@ public class Setting extends Fragment {
     private Button setting_logout;
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInOptions gso;
+    private Switch aSwitch;
 
     public static Setting newInstance() {
         return new Setting();
@@ -47,6 +51,21 @@ public class Setting extends Fragment {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+        aSwitch = v.findViewById(R.id.switch2);
+        if (MainActivity.isNoticeenable == true) {
+            aSwitch.setChecked(true);
+        } else {
+            aSwitch.setChecked(false);
+        }
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(buttonView.isChecked())
+                    Budgetmodify.savenotice(true);
+                else
+                    Budgetmodify.savenotice(false);
+            }
+        });
         TextView editTextemail = v.findViewById(R.id.txtprofileemail);
         TextView editTextname = v.findViewById(R.id.txtprofilename);
         editTextemail.setText(MainActivity.user.getEmail());

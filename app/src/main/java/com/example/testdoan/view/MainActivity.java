@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -42,7 +41,6 @@ import com.example.testdoan.service.WorkForPeriodTask_daily_monthly;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.database.collection.LLRBNode;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -157,13 +155,6 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
 
 
 
-
-
-
-
-
-
-
         db.collection("users").document(user.getId()).collection("profile").document("profile")
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
@@ -178,11 +169,9 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                             budget=snapshot.getDouble("budget");
                             actionBar = getSupportActionBar();
                             actionBar.setTitle("Budget: "+ (budget==null ? "0" : decimalFormat.format(budget)));
-                         //   if(findViewById(R.id.txt_limit)!=null)
                             {
 
                                 try {
-                                   // Double b= Double.valueOf(editText.toString());
                                     if(budget<limit && isNoticeenable)
                                     {
                                         createNotificationChannel();
@@ -248,7 +237,6 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                     public void onDateSelected(String date) {
                         modeCurrent="date";
                         timeCurrent=date;
-                        Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
                        if(CurrentTabisExpense)
                         fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                        if(CurrentTabisReport)

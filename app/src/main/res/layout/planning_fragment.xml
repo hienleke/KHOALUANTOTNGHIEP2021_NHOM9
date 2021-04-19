@@ -255,7 +255,7 @@
                     android:backgroundTint="#FAF3F3"
                     android:drawablePadding="16dp"
                     android:fontFamily="@font/calibri"
-                    android:hint="Notice when under :"
+                    android:hint="Warning me when budget under :"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
                     android:textColor="@color/black"

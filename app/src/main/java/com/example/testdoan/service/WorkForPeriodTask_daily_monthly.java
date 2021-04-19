@@ -3,7 +3,6 @@ package com.example.testdoan.service;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -80,14 +79,12 @@ public class WorkForPeriodTask_daily_monthly extends Worker {
                                 vcl.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
-                                        Toast.makeText(getApplicationContext(), "success",Toast.LENGTH_LONG).show();
                                         Budgetmodify.modify(v.getAmount(),v.isExpen());
                                     }
                                 })
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(getApplicationContext(), "fail",Toast.LENGTH_LONG).show();
                                             }
                                         });
                             }
@@ -133,14 +130,13 @@ public class WorkForPeriodTask_daily_monthly extends Worker {
                                 vcl.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
-                                        Toast.makeText(getApplicationContext(), "success",Toast.LENGTH_LONG).show();
+
                                         Budgetmodify.modify(v.getAmount(),v.isExpen());
                                     }
                                 })
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(getApplicationContext(), "fail",Toast.LENGTH_LONG).show();
                                             }
                                         });
                             }

@@ -174,7 +174,6 @@ public class ExpenseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_expense, container, false);
         openFormAddExpenseIncome =v.findViewById(R.id.addIncome);
         recyclerView=v.findViewById(R.id.iteam_debit_expense_recycleview);

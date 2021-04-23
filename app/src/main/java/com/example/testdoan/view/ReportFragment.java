@@ -257,7 +257,24 @@ public class ReportFragment extends Fragment {
         chart.invalidate();
         chart.setUsePercentValues(true);
         chart.setHighlightPerTapEnabled(true);
-        chart.getDescription().setText("Income in this time");
+        switch (mode){
+            case "date" :
+                chart.getDescription().setText("Income in day");
+                break;
+            case "month" :
+                chart.getDescription().setText("Income in month");
+                break;
+            case "week" :
+                chart.getDescription().setText("Income in week");
+                break;
+            case "year" :
+                chart.getDescription().setText("Income in year");
+                break;
+            default:
+                chart.getDescription().setText("Income in time");
+        }
+
+
 
 
         Legend l = chart.getLegend(); // get legend of pie
@@ -309,7 +326,22 @@ public class ReportFragment extends Fragment {
         expenseChart.animateY(600);
         expenseChart.setUsePercentValues(true);
         expenseChart.setHighlightPerTapEnabled(true);
-        expenseChart.getDescription().setText("Expense in this time");
+        switch (mode){
+            case "date" :
+                expenseChart.getDescription().setText("Expense in day");
+                break;
+            case "month" :
+                expenseChart.getDescription().setText("Expense in month");
+                break;
+            case "week" :
+                expenseChart.getDescription().setText("Expense in week");
+                break;
+            case "year" :
+                expenseChart.getDescription().setText("Expense in year");
+                break;
+            default:
+                expenseChart.getDescription().setText("Expense in time");
+        }
         expenseChart.setCenterTextSize(19f);
 
         Legend l = expenseChart.getLegend(); // get legend of pie

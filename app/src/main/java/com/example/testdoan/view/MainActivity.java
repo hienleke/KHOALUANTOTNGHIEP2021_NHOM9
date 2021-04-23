@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -151,8 +152,6 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
 
 
         }
-
-
 
 
         db.collection("users").document(user.getId()).collection("profile").document("profile")
@@ -401,21 +400,36 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                 case R.id.menu_expense:
                     CurrentTabisExpense=true;
                     CurrentTabisReport=false;
+                    ViewGroup.LayoutParams params = calendarView.getRecyclerView().getLayoutParams();
+                    params.height= ViewGroup.LayoutParams.WRAP_CONTENT;
+                    calendarView.getRecyclerView().setLayoutParams(params);
+                    calendarView.requestLayout();
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                     break;
                 case R.id.menu_report:
                     CurrentTabisExpense=false;
                     CurrentTabisReport=true;
+                  params = calendarView.getRecyclerView().getLayoutParams();
+                  params.height= ViewGroup.LayoutParams.WRAP_CONTENT;
+                  params.width= ViewGroup.LayoutParams.MATCH_PARENT;
+                  calendarView.invalidate();
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(modeCurrent,timeCurrent),"reportFragment").commit();
+
                     break;
                 case R.id.menu_planning:
                     CurrentTabisExpense=false;
                     CurrentTabisReport=false;
+                    params = calendarView.getRecyclerView().getLayoutParams();
+                    params.height=0;
+                    calendarView.getRecyclerView().setLayoutParams(params);
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Planning.newInstance(),"planningFragment").commit();
                     break;
                 case R.id.menu_setting:
                     CurrentTabisExpense=false;
                     CurrentTabisReport=false;
+                    params = calendarView.getRecyclerView().getLayoutParams();
+                    params.height= 0;
+                    calendarView.getRecyclerView().setLayoutParams(params);
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Setting.newInstance(),"settingFragment").commit();
                     break;
 

@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.style.UpdateLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -142,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                                         .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getApplicationContext(), "succes", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_LONG).show();
                                     }
                                 });
                             }
@@ -284,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                             @Override
                             public void onDateSelected(String date) {
                                 timeCurrent=date;
-                                Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
+                              //  Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
                                 if(CurrentTabisExpense)
                                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                                 if(CurrentTabisReport)
@@ -305,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                             @Override
                             public void onDateSelected(String date) {
                                 timeCurrent=date;
-                                Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
+                              //  Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
                                 if(CurrentTabisExpense)
                                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                                 if(CurrentTabisReport)
@@ -328,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                             @Override
                             public void onDateSelected(String date) {
                                 timeCurrent=date;
-                                Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
+                             //   Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
                                 if(CurrentTabisExpense)
                                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                                 if(CurrentTabisReport)
@@ -351,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                             @Override
                             public void onDateSelected(String date) {
                                 timeCurrent=date;
-                                Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
                                 if(CurrentTabisExpense)
                                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                                 if(CurrentTabisReport)
@@ -380,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                     @Override
                     public void onDateSelected(String date) {
                         timeCurrent=date;
-                        Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(MainActivity.this,date+" clicked!",Toast.LENGTH_SHORT).show();
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         if(CurrentTabisExpense)
                             fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
@@ -400,36 +403,37 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                 case R.id.menu_expense:
                     CurrentTabisExpense=true;
                     CurrentTabisReport=false;
-                    ViewGroup.LayoutParams params = calendarView.getRecyclerView().getLayoutParams();
-                    params.height= ViewGroup.LayoutParams.WRAP_CONTENT;
-                    calendarView.getRecyclerView().setLayoutParams(params);
-                    calendarView.requestLayout();
+//                    ViewGroup.LayoutParams params = calendarView.getRecyclerView().getLayoutParams();
+//                    params.height= ViewGroup.LayoutParams.WRAP_CONTENT;
+//                    calendarView.getRecyclerView().setLayoutParams(params);
+
+                    calendarView.setVisibility(View.VISIBLE);
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ExpenseFragment.newInstance(modeCurrent,timeCurrent),"expenseFragment").commit();
                     break;
                 case R.id.menu_report:
                     CurrentTabisExpense=false;
                     CurrentTabisReport=true;
-                  params = calendarView.getRecyclerView().getLayoutParams();
-                  params.height= ViewGroup.LayoutParams.WRAP_CONTENT;
-                  params.width= ViewGroup.LayoutParams.MATCH_PARENT;
-                  calendarView.invalidate();
+
+
+                    calendarView.setVisibility(View.VISIBLE);
+
+
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, ReportFragment.newInstance(modeCurrent,timeCurrent),"reportFragment").commit();
 
                     break;
                 case R.id.menu_planning:
                     CurrentTabisExpense=false;
                     CurrentTabisReport=false;
-                    params = calendarView.getRecyclerView().getLayoutParams();
-                    params.height=0;
-                    calendarView.getRecyclerView().setLayoutParams(params);
+                    calendarView.setVisibility(View.GONE);
+
+
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Planning.newInstance(),"planningFragment").commit();
                     break;
                 case R.id.menu_setting:
                     CurrentTabisExpense=false;
                     CurrentTabisReport=false;
-                    params = calendarView.getRecyclerView().getLayoutParams();
-                    params.height= 0;
-                    calendarView.getRecyclerView().setLayoutParams(params);
+
+                    calendarView.setVisibility(View.GONE);
                     fragmentManager.beginTransaction().replace(R.id.containerFramelayout, Setting.newInstance(),"settingFragment").commit();
                     break;
 

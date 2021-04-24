@@ -71,6 +71,7 @@ public class ReportFragment extends Fragment {
     private double TotalExpense=0;
     private double Total;
     private TextView report_income,report_expense,report_total;
+    private TextView title_barChart,title_piechart;
     DecimalFormat decimalFormat = new DecimalFormat("#,###.00 ¤");
 
 
@@ -117,6 +118,8 @@ public class ReportFragment extends Fragment {
         report_expense=v.findViewById(R.id.report_expense);
         report_income=v.findViewById(R.id.report_income);
         report_total=v.findViewById(R.id.report_total);
+        title_barChart = v.findViewById(R.id.titlebarchart);
+        title_piechart=v.findViewById(R.id.titlepiechart);
 
          query = MainActivity.db
                 .collection("users")
@@ -158,6 +161,7 @@ public class ReportFragment extends Fragment {
                 Date end2 = Date.from(localDate2end.atTime(23, 59, 59).toInstant(currentOffsetForMyZone2));
                 query = query.whereGreaterThanOrEqualTo("timeCreated", begin2).whereLessThanOrEqualTo("timeCreated", end2);
                 getdataforChart(query);
+                createLinechart("month",end2,year2begin,month2begin,1);
 
                 break;
             case "month":
@@ -187,8 +191,6 @@ public class ReportFragment extends Fragment {
 
                 getdataforChart(query);
                 createLinechart("year", begin2, year2begin, 1, 1);
-
-
 
                 break;
 
@@ -231,7 +233,7 @@ public class ReportFragment extends Fragment {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "Category";
 
-        report_income.setText("Income: "+decimalFormat.format(Totalincome));
+
 
         //input data and fit data into pie chart entry
         Set<String> local = typeAmountMap.keySet();
@@ -257,23 +259,6 @@ public class ReportFragment extends Fragment {
         chart.invalidate();
         chart.setUsePercentValues(true);
         chart.setHighlightPerTapEnabled(true);
-        switch (mode){
-            case "date" :
-                chart.getDescription().setText("Income in day");
-                break;
-            case "month" :
-                chart.getDescription().setText("Income in month");
-                break;
-            case "week" :
-                chart.getDescription().setText("Income in week");
-                break;
-            case "year" :
-                chart.getDescription().setText("Income in year");
-                break;
-            default:
-                chart.getDescription().setText("Income in time");
-        }
-
 
 
 
@@ -304,7 +289,7 @@ public class ReportFragment extends Fragment {
             else
                 typeAmountMap.put(e.getCategory(), e.getAmount());
         }
-        report_expense.setText("Expense: "+decimalFormat.format(TotalExpense));
+
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "Category";
 
@@ -352,6 +337,7 @@ public class ReportFragment extends Fragment {
         expenseChart.setCenterTextColor(Color.RED);
         expenseChart.invalidate();
 
+
     }
 
     void getdataforChart(Query query) {
@@ -373,7 +359,37 @@ public class ReportFragment extends Fragment {
                 }
                 handlerIncomeChart(incomes);
                 handlerExpenseChart(expenses);
+                expenseChart.getDescription().setTextSize(15);
+                chart.getDescription().setTextSize(15);
+
+                report_income.setText("Income: "+decimalFormat.format(Totalincome));
+                report_expense.setText("Expense: "+decimalFormat.format(TotalExpense));
                 report_total.setText("Total : "+ decimalFormat.format(Totalincome-TotalExpense));
+
+
+                switch (mode){
+                    case "date" :
+                        title_barChart.setText("Comparison income/expense between day in week");
+                        chart.getDescription().setText("Income in day");
+                        break;
+                    case "month" :
+                        title_barChart.setText("Comparison income/expense between day in month " +time);
+                        chart.getDescription().setText("Income in month");
+                        break;
+                    case "week" :
+                        title_barChart.setText("Comparison income/expense between day in month ");
+                        chart.getDescription().setText("Income in month");
+                        break;
+                    case "year" :
+                        title_barChart.setText("Comparison income/expense between month in year " +time);
+                        chart.getDescription().setText("Income in year");
+                        break;
+                    default:
+                        chart.getDescription().setText("Income in time");
+                }
+
+                title_piechart.setText("Percentage of category in " + time );
+
             }
         });
     }
@@ -540,8 +556,81 @@ public class ReportFragment extends Fragment {
 
                 break;
             case "week":
+                barChart.getDescription().setText("Day in this month");
+                calendar = Calendar.getInstance();
+                calendar.setTime(time);
+                instant = Instant.now();
+                zoneid = ZoneId.systemDefault();
+                currentOffsetForMyZone = zoneid.getRules().getOffset(instant);
+                localDate1 = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, 1);
+                begin = Date.from(localDate1.atStartOfDay(zoneid).toInstant());
+                localDate1 = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1 , calendar.get(Calendar.DATE)).with(TemporalAdjusters.lastDayOfMonth());
+                end = Date.from(localDate1.atTime(23, 59, 59).toInstant(currentOffsetForMyZone));
+                query = query.whereGreaterThanOrEqualTo("timeCreated", begin).whereLessThanOrEqualTo("timeCreated", end);
+                expensesTemp = new ArrayList<>();
+                incomesTemp = new ArrayList<>();
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                Expense iteam = new Expense(doc.getId(), doc.getString("category"), doc.getTimestamp("timeCreated"), doc.getString("note"), doc.getDouble("amount"), doc.getBoolean("expen"));
+                                if (iteam.isExpen()) {
+                                    expensesTemp.add(iteam);
+                                } else {
+                                    incomesTemp.add(iteam);
+                                    Log.d("xxxx", iteam.getTimeCreated() + "//" + iteam.getTimeCreated().toDate() + "//");
+                                }
+                            }
+                        } else {
+                            Log.d("sai r", "Error getting documents: ", task.getException());
+                        }
 
-                return;
+                        HashMap<Integer,Double> mapExpense = new HashMap<>();
+                        HashMap<Integer,Double> mapIncome = new HashMap<>();
+                        for (Expense e : expensesTemp) {
+                            int day = e.getTimeCreated().toDate().getDate();
+                            if (mapExpense.containsKey(day)) {
+                                mapExpense.put(day, (mapExpense.get(day) + e.getAmount()));
+                            } else
+                                mapExpense.put(day, e.getAmount());
+                        }
+
+                        for (Expense e : incomesTemp) {
+                            int day = e.getTimeCreated().toDate().getDate();
+                            if (mapIncome.containsKey(day)) {
+                                mapIncome.put(day, (mapIncome.get(day) + e.getAmount()));
+                            } else
+                                mapIncome.put(day, e.getAmount());
+                        }
+
+                        Iterator it = mapIncome.entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry)it.next();
+                            Double d = (Double) pair.getValue();
+                            barEntriesIncome.add(new BarEntry((Integer)pair.getKey(),d.floatValue()));
+
+                            it.remove();
+                        }
+                        Iterator it1 = mapExpense.entrySet().iterator();
+                        while (it1.hasNext()) {
+                            Map.Entry pair = (Map.Entry)it1.next();
+                            Double d = (Double) pair.getValue();
+                            barEntriesExpense.add(new BarEntry((Integer)pair.getKey(),d.floatValue()));
+                            it1.remove();
+                        }
+                        List<String> temptemp = new ArrayList<String>();
+                        int limit = end.getDate();
+                        for(int i=1;i<=limit;i++)
+                        {
+                            temptemp.add(String.valueOf(i));
+                        }
+                        String[] xValues = new String[temptemp.size()];
+                        xValues = temptemp.toArray(xValues);
+                        createBarchart(xValues,   chuanhoa(barEntriesIncome,limit),   chuanhoa(barEntriesExpense,limit), limit);
+                    }
+                });
+                break;
 
             case "month":
                 barChart.getDescription().setText("Day in this month");
@@ -687,14 +776,23 @@ public class ReportFragment extends Fragment {
                         }
 
                         List<String> temptemp = new ArrayList<String>();
-                        int limit = 12;
-                        for(int i=1;i<=limit;i++)
-                        {
-                            temptemp.add(String.valueOf(i));
-                        }
+
+                            temptemp.add("Jan");
+                            temptemp.add("Feb");
+                            temptemp.add("Mar");
+                            temptemp.add("Apr");
+                            temptemp.add("May");
+                            temptemp.add("Jun");
+                            temptemp.add("Jul");
+                            temptemp.add("Aug");
+                            temptemp.add("Sep");
+                            temptemp.add("Oct");
+                            temptemp.add("Nov");
+                            temptemp.add("Dec");
+
                         String[] xValues = new String[temptemp.size()];
                         xValues = temptemp.toArray(xValues);
-                        createBarchart(xValues,   chuanhoa(barEntriesIncome,limit),   chuanhoa(barEntriesExpense,limit), limit);
+                        createBarchart(xValues,   chuanhoa(barEntriesIncome,12),   chuanhoa(barEntriesExpense,12), 12);
 
                     }
                 });
@@ -703,6 +801,7 @@ public class ReportFragment extends Fragment {
                 return;
 
         }
+
     }
 
     private void createBarchart(String[] xValues, List<BarEntry> barEntriesIncome, List<BarEntry> barEntriesExpense, int limit) {
@@ -728,6 +827,7 @@ public class ReportFragment extends Fragment {
         barChart.getXAxis().setAxisMinimum(0);
         barChart.getXAxis().setAxisMaximum(0 + barChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
         barChart.groupBars(0, groupSpace, barSpace);
+        barChart.getDescription().setTextSize(12);
         barChart.invalidate();
     }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name"></string>
+    <string name="app_name">Manage Money</string>
     <string name="setting">setting</string>
     <string name="hangngay">hangngay</string>
     <string name="thongke">thongke</string>

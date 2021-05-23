@@ -69,7 +69,7 @@
             android:layout_weight=".75"
             android:background="@drawable/rouder_edittext"
             android:inputType="numberDecimal"
-            android:maxLength="13"
+            android:maxLength="12"
             android:padding="7dp" />
 
     </LinearLayout>

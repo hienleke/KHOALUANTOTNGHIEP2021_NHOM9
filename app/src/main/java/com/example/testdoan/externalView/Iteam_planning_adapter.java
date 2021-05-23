@@ -3,6 +3,7 @@ package com.example.testdoan.externalView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.icu.text.DecimalFormat;
 import android.icu.text.DecimalFormatSymbols;
 import android.os.Build;
@@ -19,8 +20,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.testdoan.R;
+import com.example.testdoan.model.Expense;
+import com.example.testdoan.model.ExpensePeriodic;
 import com.example.testdoan.model.Planing;
 import com.example.testdoan.view.MainActivity;
 import com.example.testdoan.view.Planning_Holder;
@@ -42,10 +46,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -81,7 +88,7 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
         holder.current.setText(String.valueOf(decimalFormat.format(model.getCurrent())));
         holder.progressBar2.setMax((int) model.getAmount());
         if(holder!=null)
-        setprocess(holder.progressBar2,holder.current,model.getTimeStart(),model.getTimeEnd(),model.getId());
+        setprocess(holder.progressBar2,holder.current,model.getTimeStart(),model.getTimeEnd(),model.getId(),holder.Estimated_time,model.getAmount());
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,7 +150,7 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
         return new Planning_Holder(view);
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    void setprocess(ProgressBar v, TextView current, Timestamp start, Timestamp end, String id)
+    void setprocess(ProgressBar v, TextView current, Timestamp start, Timestamp end, String id, TextView estime, double target)
     {
         MainActivity.
                 db.collection("users").document(MainActivity.user.getId()).collection("planning").document(id)
@@ -209,9 +216,108 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
                                             int x = (int) tong1 - (int) tong;
                                             v.setProgress(x,true);
 
+
                                             current.setText(decimalFormat.format(x));
+                                            if( v.getMax()-x <= 0)
+                                           {
+                                                estime.setText("The plan has been completed !!!");
+                                                estime.setTextColor(ContextCompat.getColor(context, R.color.backgroundselect));
+                                                return;
+                                          }
+                                            if(v.getMax()-x > 0 && new Date().after(end.toDate()))
+                                            {
+                                                estime.setText("It's too late to complete the plan. The planning can not be successful !!!");
+                                                estime.setTextColor(ContextCompat.getColor(context, R.color.red_900));
+                                                return;
+                                            }
+                                            MainActivity.db
+                                                    .collection("users")
+                                                    .document(MainActivity.user.getId())
+                                                    .collection("expensePeriodic").whereEqualTo("enable", true)
+                                                    .get()
+                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                            double tong = 0;
+                                                            double tong1 = 0;
+
+                                                            List<ExpensePeriodic> thutheo_thang = new ArrayList<>();
+                                                            List<ExpensePeriodic> chitheo_thang = new ArrayList<>();
+                                                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                                                if (doc.getBoolean("expen") && doc.getString("period").equalsIgnoreCase("daily")) {
+                                                                    tong += doc.getDouble("amount");
+                                                                }
+                                                                else if (!doc.getBoolean("expen") && doc.getString("period").equalsIgnoreCase("daily")){
+                                                                    tong1 += doc.getDouble("amount");
+                                                                }
+                                                                else  if (doc.getBoolean("expen") && doc.getString("period").equalsIgnoreCase("monthly")) {
+                                                                   chitheo_thang.add(new ExpensePeriodic(doc.getString("category"),doc.getTimestamp("timeCreated"),doc.getString("note") ,doc.getDouble("amount"),doc.getBoolean("expen"),doc.getBoolean("enable") ));
+                                                                }
+                                                                else  if (!doc.getBoolean("expen") && doc.getString("period").equalsIgnoreCase("monthly")) {
+                                                                    thutheo_thang.add(new ExpensePeriodic(doc.getString("category"), doc.getTimestamp("timeCreated"), doc.getString("note"), doc.getDouble("amount"), doc.getBoolean("expen"), doc.getBoolean("enable")));
+                                                                }
+                                                            }
+                                                            double y = (double) tong1 - (double) tong;
+                                                            double tamppp =0.0;
+                                                            double conlai = target-x;
+                                                            for (Date date = new Date(); date.before(end.toDate());)
+                                                            {
+                                                                tamppp+=y;
+                                                                    for (ExpensePeriodic ep : chitheo_thang)
+                                                                    {
+                                                                        if(ep.getTimeCreated().toDate().getDate()==date.getDate())
+                                                                        {
+                                                                            tamppp-=ep.getAmount();
+                                                                        }
+                                                                    }
+                                                                for (ExpensePeriodic ep : thutheo_thang)
+                                                                {
+                                                                    if(ep.getTimeCreated().toDate().getDate()==date.getDate())
+                                                                    {
+                                                                        tamppp+=ep.getAmount();
+                                                                    }
+                                                                }
+                                                                    if(tamppp>=conlai)
+                                                                    {
+                                                                        estime.setText(format.format(date));
+                                                                        estime.setTextColor(ContextCompat.getColor(context, R.color.orange_500));
+                                                                        break;
+                                                                    }
+
+
+                                                                Calendar c = Calendar.getInstance();
+                                                                c.setTime(date);
+                                                                c.add(Calendar.DATE, 1);
+                                                                date=c.getTime();
+                                                                if(date.after(end.toDate()) && tamppp<=0)
+                                                                {
+                                                                    estime.setTextColor(ContextCompat.getColor(context, R.color.red_700));
+                                                                    estime.setText(" Can't not be done right now because you don't have enough income !!!");
+                                                                    break;
+                                                                }
+
+                                                            }
+
+
+
+
+
+                                                        }
+                                                    });
+
+
+
+
+
+
+
+
                                         }
                                     });
+
+
+
+
                         }
                     }
                 });
@@ -219,4 +325,10 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
 
 
     }
+
+
+
+
+
+
 }

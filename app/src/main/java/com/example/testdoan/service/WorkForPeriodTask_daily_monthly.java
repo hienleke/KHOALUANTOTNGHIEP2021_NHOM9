@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -46,11 +47,10 @@ public class WorkForPeriodTask_daily_monthly extends Worker {
     @Override
     public Result doWork() {
 
-
-
         FirebaseFirestore db = MainActivity.db;
         List<ExpensePeriodic> cities = new ArrayList<>();
         u= MainActivity.user;
+
         db.collection("users")
                 .document(u.getId())
                 .collection("expensePeriodic").whereEqualTo("enable", true).whereEqualTo("period","daily")
@@ -94,7 +94,7 @@ public class WorkForPeriodTask_daily_monthly extends Worker {
                     }
                 });
 
-
+        List<ExpensePeriodic> cities2 = new ArrayList<>();
         db.collection("users")
                 .document(u.getId())
                 .collection("expensePeriodic").whereEqualTo("enable", true).whereEqualTo("period","monthly")
@@ -105,17 +105,16 @@ public class WorkForPeriodTask_daily_monthly extends Worker {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot doc : task.getResult()) {
-
-                                cities.add(new ExpensePeriodic(doc.getString("category"),doc.getTimestamp("timeCreated"),doc.getString("note") ,doc.getDouble("amount"),doc.getBoolean("expen"),doc.getBoolean("enable") ));
-
+                                cities2.add(new ExpensePeriodic(doc.getString("category"),doc.getTimestamp("timeCreated"),doc.getString("note") ,doc.getDouble("amount"),doc.getBoolean("expen"),doc.getBoolean("enable") ));
                             }
+
                             CollectionReference vcl = db
                                     .collection("users")
                                     .document(u.getId())
                                     .collection("expense");
 
 
-                            for (ExpensePeriodic v : cities)
+                            for (ExpensePeriodic v : cities2)
                             {
                                 Date from  = v.getTimeCreated().toDate();
                                 if(!CompareDatetoadd(from))
@@ -145,10 +144,6 @@ public class WorkForPeriodTask_daily_monthly extends Worker {
                         }
                     }
                 });
-
-
-
-
 
         return Result.success();
     }

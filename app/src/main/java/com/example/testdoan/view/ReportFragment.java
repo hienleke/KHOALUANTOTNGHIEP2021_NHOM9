@@ -4,10 +4,14 @@ import android.graphics.Color;
 import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -73,6 +77,9 @@ public class ReportFragment extends Fragment {
     private TextView report_income,report_expense,report_total;
     private TextView title_barChart,title_piechart;
     DecimalFormat decimalFormat = new DecimalFormat("#,###.00 ¤");
+    TableLayout tableLayoutforIncome;
+    TableLayout tableLayoutforExpense ;
+
 
 
     public static ReportFragment newInstance(String mode, String time) {
@@ -120,6 +127,9 @@ public class ReportFragment extends Fragment {
         report_total=v.findViewById(R.id.report_total);
         title_barChart = v.findViewById(R.id.titlebarchart);
         title_piechart=v.findViewById(R.id.titlepiechart);
+        tableLayoutforExpense=v.findViewById(R.id.tabforexpense);
+        tableLayoutforIncome=v.findViewById(R.id.tabforincome);
+
 
          query = MainActivity.db
                 .collection("users")
@@ -278,12 +288,12 @@ public class ReportFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     void handlerExpenseChart(List<Expense> data) {
-        TotalExpense=0.0;
+        TotalExpense = 0.0;
         if (data.size() == 0)
             return;
         Map<String, Double> typeAmountMap = new HashMap<>();
         for (Expense e : data) {
-            TotalExpense+=e.getAmount();
+            TotalExpense += e.getAmount();
             if (typeAmountMap.containsKey(e.getCategory()))
                 typeAmountMap.put(e.getCategory(), typeAmountMap.get(e.getCategory()) + e.getAmount());
             else
@@ -295,8 +305,10 @@ public class ReportFragment extends Fragment {
 
 
         //input data and fit data into pie chart entry
+        StringBuilder sb = new StringBuilder();
         for (String type : typeAmountMap.keySet()) {
             pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
+            sb.append(type).append(";").append(typeAmountMap.get(type).floatValue()).append("_");
         }
 
         PieDataSet pieDataSet = new PieDataSet(pieEntries, label);
@@ -311,17 +323,17 @@ public class ReportFragment extends Fragment {
         expenseChart.animateY(600);
         expenseChart.setUsePercentValues(true);
         expenseChart.setHighlightPerTapEnabled(true);
-        switch (mode){
-            case "date" :
+        switch (mode) {
+            case "date":
                 expenseChart.getDescription().setText("Expense in day");
                 break;
-            case "month" :
+            case "month":
                 expenseChart.getDescription().setText("Expense in month");
                 break;
-            case "week" :
+            case "week":
                 expenseChart.getDescription().setText("Expense in week");
                 break;
-            case "year" :
+            case "year":
                 expenseChart.getDescription().setText("Expense in year");
                 break;
             default:
@@ -338,6 +350,36 @@ public class ReportFragment extends Fragment {
         expenseChart.invalidate();
 
 
+        String st = new String("");
+
+        String[] rows = st.split("_");
+
+        tableLayoutforExpense.removeAllViews();
+        TableRow tableRowtitle = new TableRow(getContext());
+
+        tableLayoutforExpense.addView(tableRowtitle);
+
+
+
+        for (int i = 0; i < rows.length; i++) {
+            String row = rows[i];
+            TableRow tableRow = new TableRow(getContext());
+            final String[] cols = row.split(";");
+
+
+
+            for (int j = 0; j < cols.length; j++) {
+
+                final String col = cols[j];
+                final TextView columsView = new TextView(getContext());
+                columsView.setText(String.format("%7s", col));
+                tableRow.addView(columsView);
+
+            }
+            tableLayoutforExpense.addView(tableRow);
+
+
+        }
     }
 
     void getdataforChart(Query query) {
@@ -829,6 +871,11 @@ public class ReportFragment extends Fragment {
         barChart.groupBars(0, groupSpace, barSpace);
         barChart.getDescription().setTextSize(12);
         barChart.invalidate();
+
+
+
+
+
     }
 
     private ArrayList<BarEntry> chuanhoa(ArrayList<BarEntry> data, int limit)
@@ -845,4 +892,5 @@ public class ReportFragment extends Fragment {
         return afterChuanhoa;
     }
 
+    
 }

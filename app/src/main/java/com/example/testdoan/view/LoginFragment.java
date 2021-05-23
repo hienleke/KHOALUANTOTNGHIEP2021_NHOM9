@@ -144,8 +144,25 @@ public class LoginFragment extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
-                                    Log.d("xx", "signInWithEmail:success");
+
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    Log.d("xx", "signInWithEmail:success");
+                                        if (user != null) {
+                                            Intent t = new Intent(getActivity(),MainActivity.class);
+                                            t.putExtra("userName",user.getDisplayName());
+                                            t.putExtra("userId",user.getUid());
+                                            t.putExtra("userEmail",user.getUid());
+                                            t.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(t);
+                                            getActivity().finish();
+                                        }
+
+                                        else {
+                                            // If sign in fails, display a message to the user.
+                                            Log.w("Xxx", "signInWithCredential:failure", task.getException());
+                                            // updateUI(null);
+                                        }
+
 
                                   //  updateUI(user);
                                 } else {

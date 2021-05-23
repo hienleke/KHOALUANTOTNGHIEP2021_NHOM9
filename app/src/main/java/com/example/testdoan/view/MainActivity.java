@@ -6,6 +6,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
@@ -109,12 +110,13 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                 .setRequiresStorageNotLow(false)
                 .setRequiresDeviceIdle(false)
                 .build();
+
         PeriodicWorkRequest Dailywork =
-                new PeriodicWorkRequest.Builder(WorkForPeriodTask_daily_monthly.class, 1, TimeUnit.DAYS).setConstraints(constraints).build();
+                new PeriodicWorkRequest.Builder(WorkForPeriodTask_daily_monthly.class, 15,  TimeUnit.MINUTES).setConstraints(constraints).build();
 
         WorkManager
                 .getInstance(getApplicationContext())
-                .enqueueUniquePeriodicWork("xxx", ExistingPeriodicWorkPolicy.KEEP,Dailywork);
+                .enqueueUniquePeriodicWork("xxx", ExistingPeriodicWorkPolicy.REPLACE,Dailywork);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -151,9 +153,6 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                             }
                         }
                     });
-
-
-
         }
 
 
@@ -183,8 +182,31 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
 
                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                                                 .setSmallIcon(android.R.drawable.stat_sys_warning)
-                                                .setContentTitle("Manage Money Warning")
-                                                .setContentText("Your budget too low")
+                                                .setContentTitle("Manage Money Notice".toUpperCase())
+                                                .setContentText("Your budget too low xxxxx")
+                                                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.icon_managemoney))
+                                                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                                                .setPriority(NotificationCompat.PRIORITY_MAX);
+
+                                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+                                        notificationManager.notify(2, builder.build());
+                                    }
+                                    if(budget>99999999999.0 && isNoticeenable)
+                                    {
+                                        Budgetmodify.init(99999999999.0);
+                                        createNotificationChannel();
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                                                intent, PendingIntent.FLAG_ONE_SHOT);
+
+                                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                                                .setSmallIcon(R.drawable.icon_managemoney)
+                                                .setShowWhen(true)
+                                                .setContentTitle("Manage Money Notice".toUpperCase())
+                                                .setStyle(new NotificationCompat.BigTextStyle()
+                                                        .bigText("Your budget value out of the ability to calculate set to 99999999999.0"))
+                                              //  .setContentText("Your budget value out of the ability to calculate set to 99999999999.0")
+                                                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.icon_managemoney))
                                                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                                                 .setPriority(NotificationCompat.PRIORITY_MAX);
 

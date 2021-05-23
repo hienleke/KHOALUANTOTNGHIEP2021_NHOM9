@@ -20,7 +20,9 @@ public class Planning_Holder extends RecyclerView.ViewHolder {
      public TextView current;
      public ImageView edit;
      public ImageView remove;
+     public ImageView hint;
     public ProgressBar progressBar2;
+    public TextView Estimated_time;
 
 
     public Planning_Holder(@NonNull View itemView) {
@@ -33,6 +35,8 @@ public class Planning_Holder extends RecyclerView.ViewHolder {
         remove = itemView.findViewById(R.id.planning_remove);
         current = itemView.findViewById(R.id.iteam_planning_current);
         progressBar2 = itemView.findViewById(R.id.iteam_processbar_planning);
+        hint = itemView.findViewById(R.id.planning_hint);
+        Estimated_time = itemView.findViewById(R.id.Estimated_time);
 
     }
 }

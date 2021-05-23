@@ -113,11 +113,6 @@ public class Planning extends Fragment {
 
         adapter_planning = new Iteam_planning_adapter(optionsPlanning,getContext());
 
-
-
-
-
-
     }
 
     @Override

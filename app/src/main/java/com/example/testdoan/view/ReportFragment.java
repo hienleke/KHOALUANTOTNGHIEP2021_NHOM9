@@ -138,6 +138,7 @@ public class ReportFragment extends Fragment {
 
         switch (mode) {
             case "date":
+                barChart.setVisibility(View.VISIBLE);
                 int day = Integer.valueOf(time.split("-")[0]);
                 int month = Integer.valueOf(time.split("-")[1]);
                 int year = Integer.valueOf(time.split("-")[2]);
@@ -154,6 +155,7 @@ public class ReportFragment extends Fragment {
 
                 break;
             case "week":
+                barChart.setVisibility(View.VISIBLE);
                 String time2begin = time.split("-")[0];
                 String time2end = time.split("-")[1];
                 int day2begin = Integer.valueOf(time2begin.split("/")[0]);
@@ -175,6 +177,7 @@ public class ReportFragment extends Fragment {
 
                 break;
             case "month":
+                barChart.setVisibility(View.VISIBLE);
                 month2begin = Integer.valueOf(time.split("/")[0]);
                 year2begin = Integer.valueOf(time.split("/")[1]);
                 localDate2begin = LocalDate.of(year2begin, month2begin, 1);
@@ -189,6 +192,7 @@ public class ReportFragment extends Fragment {
                 createLinechart("month",end2,year2begin,month2begin,1);
                 break;
             case "year":
+                barChart.setVisibility(View.VISIBLE);
                 year2begin = Integer.valueOf(time);
                 localDate2begin = LocalDate.of(year2begin, 1, 1);
                 localDate2end = LocalDate.of(year2begin, 12, 31);
@@ -205,6 +209,7 @@ public class ReportFragment extends Fragment {
                 break;
 
             case "period":
+                barChart.setVisibility(View.GONE);
                 time2begin = time.split("-")[0] ;
                 time2end = time.split("-")[1];
                 day2begin = Integer.valueOf(time2begin.split("/")[0]);
@@ -350,36 +355,8 @@ public class ReportFragment extends Fragment {
         expenseChart.invalidate();
 
 
-        String st = new String("");
-
-        String[] rows = st.split("_");
-
-        tableLayoutforExpense.removeAllViews();
-        TableRow tableRowtitle = new TableRow(getContext());
-
-        tableLayoutforExpense.addView(tableRowtitle);
 
 
-
-        for (int i = 0; i < rows.length; i++) {
-            String row = rows[i];
-            TableRow tableRow = new TableRow(getContext());
-            final String[] cols = row.split(";");
-
-
-
-            for (int j = 0; j < cols.length; j++) {
-
-                final String col = cols[j];
-                final TextView columsView = new TextView(getContext());
-                columsView.setText(String.format("%7s", col));
-                tableRow.addView(columsView);
-
-            }
-            tableLayoutforExpense.addView(tableRow);
-
-
-        }
     }
 
     void getdataforChart(Query query) {

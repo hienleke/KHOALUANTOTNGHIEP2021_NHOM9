@@ -14,10 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Testdoan">
-        <service
-            android:name=".service.pushnotification"
-            android:enabled="true"
-            android:exported="true"></service>
+
 
         <activity android:name=".view.Login">
             <intent-filter>
@@ -30,11 +27,11 @@
             android:name=".view.Category_Manage"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity android:name=".view.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
     </application>
 

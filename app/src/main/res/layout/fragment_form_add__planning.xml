@@ -38,7 +38,7 @@
             android:layout_weight=".75"
             android:background="@drawable/rouder_edittext"
             android:inputType="numberDecimal"
-            android:maxLength="12"
+            android:maxLength="11"
             android:padding="7dp" />
 
     </LinearLayout>

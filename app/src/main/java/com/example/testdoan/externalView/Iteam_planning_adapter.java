@@ -1,8 +1,14 @@
 package com.example.testdoan.externalView;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.icu.text.DecimalFormat;
 import android.icu.text.DecimalFormatSymbols;
@@ -20,6 +26,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.testdoan.R;
@@ -64,6 +72,8 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
      *
      * @param options
      */
+
+    private static final String CHANNEL_ID ="Planningnotice" ;
     DecimalFormat decimalFormat = new DecimalFormat("#,###.00 ¤");
     private  SimpleDateFormat format;
     private Context context;
@@ -88,7 +98,7 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
         holder.current.setText(String.valueOf(decimalFormat.format(model.getCurrent())));
         holder.progressBar2.setMax((int) model.getAmount());
         if(holder!=null)
-        setprocess(holder.progressBar2,holder.current,model.getTimeStart(),model.getTimeEnd(),model.getId(),holder.Estimated_time,model.getAmount());
+        setprocess(holder.progressBar2,holder.current,model.getTimeStart(),model.getTimeEnd(),model.getId(),holder.Estimated_time,model.getAmount(),model);
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,7 +160,7 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
         return new Planning_Holder(view);
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    void setprocess(ProgressBar v, TextView current, Timestamp start, Timestamp end, String id, TextView estime, double target)
+    void setprocess(ProgressBar v, TextView current, Timestamp start, Timestamp end, String id, TextView estime, double target,Planing pl)
     {
         MainActivity.
                 db.collection("users").document(MainActivity.user.getId()).collection("planning").document(id)
@@ -220,12 +230,14 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
                                             current.setText(decimalFormat.format(x));
                                             if( v.getMax()-x <= 0)
                                            {
+                                               taothongbao(pl.getTitle() + " has been completed !!!");
                                                 estime.setText("The plan has been completed !!!");
                                                 estime.setTextColor(ContextCompat.getColor(context, R.color.backgroundselect));
                                                 return;
                                           }
                                             if(v.getMax()-x > 0 && new Date().after(end.toDate()))
                                             {
+                                                taothongbao(pl.getTitle() + "too late to complete the plan. The planning can not be successful !!!");
                                                 estime.setText("It's too late to complete the plan. The planning can not be successful !!!");
                                                 estime.setTextColor(ContextCompat.getColor(context, R.color.red_900));
                                                 return;
@@ -260,7 +272,7 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
                                                             double y = (double) tong1 - (double) tong;
                                                             double tamppp =0.0;
                                                             double conlai = target-x;
-                                                            for (Date date = new Date(); date.before(end.toDate());)
+                                                            for (Date date = new Date();;)
                                                             {
                                                                 tamppp+=y;
                                                                     for (ExpensePeriodic ep : chitheo_thang)
@@ -291,6 +303,9 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
                                                                 date=c.getTime();
                                                                 if(date.after(end.toDate()) && tamppp<=0)
                                                                 {
+
+                                                                    taothongbao(pl.getTitle() + " can't not be done right now because you don't have enough income !!!");
+
                                                                     estime.setTextColor(ContextCompat.getColor(context, R.color.red_700));
                                                                     estime.setText(" Can't not be done right now because you don't have enough income !!!");
                                                                     break;
@@ -328,7 +343,45 @@ public class Iteam_planning_adapter extends FirestoreRecyclerAdapter<Planing, Pl
 
 
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Notice";
+            String description = "Your budget too low";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.enableVibration(true);
+            channel.setDescription(description);
+            channel.setShowBadge(true);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
+    private void taothongbao(String tenplan)
+    {
+
+        createNotificationChannel();
+        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(context.getApplicationContext(), 0,
+                intent, PendingIntent.FLAG_ONE_SHOT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.icon_managemoney)
+                .setContentTitle("Manage Money Notice".toUpperCase())
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(tenplan ))
+                .setLargeIcon(BitmapFactory.decodeResource(context.getApplicationContext().getResources(), R.drawable.icon_managemoney))
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setPriority(NotificationCompat.PRIORITY_MAX);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context.getApplicationContext());
+        notificationManager.notify(2, builder.build());
+    }
 
 
 }

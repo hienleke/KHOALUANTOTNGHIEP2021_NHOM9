@@ -10,14 +10,11 @@ import android.graphics.BitmapFactory;
 import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.style.UpdateLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -112,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                 .build();
 
         PeriodicWorkRequest Dailywork =
-                new PeriodicWorkRequest.Builder(WorkForPeriodTask_daily_monthly.class, 15,  TimeUnit.MINUTES).setConstraints(constraints).build();
+                new PeriodicWorkRequest.Builder(WorkForPeriodTask_daily_monthly.class, 1,  TimeUnit.DAYS).setConstraints(constraints).build();
 
         WorkManager
                 .getInstance(getApplicationContext())
@@ -181,9 +178,9 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
                                                 intent, PendingIntent.FLAG_ONE_SHOT);
 
                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                                                .setSmallIcon(android.R.drawable.stat_sys_warning)
+                                                .setSmallIcon(R.drawable.icon_managemoney)
                                                 .setContentTitle("Manage Money Notice".toUpperCase())
-                                                .setContentText("Your budget too low xxxxx")
+                                                .setContentText("Your budget too low")
                                                 .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.icon_managemoney))
                                                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                                                 .setPriority(NotificationCompat.PRIORITY_MAX);
@@ -615,7 +612,7 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Notice";
-            String description = "Your budget too low";
+            String description = "Your budget too low !!!";
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.enableVibration(true);

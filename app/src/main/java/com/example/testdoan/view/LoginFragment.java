@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.example.testdoan.R;
 import com.example.testdoan.repository.Budgetmodify;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -137,6 +139,23 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 String email = Login_email.getText().toString();
                 String password = Login_pass.getText().toString();
+                if(email.equalsIgnoreCase(""))
+                {
+                    YoYo.with(Techniques.Tada)
+                            .duration(300)
+                            .repeat(2)
+                            .playOn(Login_email);
+                    return;
+                }
+                if(password.equalsIgnoreCase(""))
+                {
+                    YoYo.with(Techniques.Tada)
+                            .duration(300)
+                            .repeat(2)
+                            .playOn(Login_pass);
+                    return;
+                }
+
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                             @RequiresApi(api = Build.VERSION_CODES.N)

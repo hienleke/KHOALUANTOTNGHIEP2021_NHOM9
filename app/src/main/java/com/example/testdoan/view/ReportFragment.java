@@ -77,8 +77,7 @@ public class ReportFragment extends Fragment {
     private TextView report_income,report_expense,report_total;
     private TextView title_barChart,title_piechart;
     DecimalFormat decimalFormat = new DecimalFormat("#,###.00 ¤");
-    TableLayout tableLayoutforIncome;
-    TableLayout tableLayoutforExpense ;
+
 
 
 
@@ -127,8 +126,7 @@ public class ReportFragment extends Fragment {
         report_total=v.findViewById(R.id.report_total);
         title_barChart = v.findViewById(R.id.titlebarchart);
         title_piechart=v.findViewById(R.id.titlepiechart);
-        tableLayoutforExpense=v.findViewById(R.id.tabforexpense);
-        tableLayoutforIncome=v.findViewById(R.id.tabforincome);
+
 
 
          query = MainActivity.db

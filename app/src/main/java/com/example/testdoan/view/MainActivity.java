@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements getdataFromFragme
 
         WorkManager
                 .getInstance(getApplicationContext())
-                .enqueueUniquePeriodicWork("xxx", ExistingPeriodicWorkPolicy.REPLACE,Dailywork);
+                .enqueueUniquePeriodicWork("xxx", ExistingPeriodicWorkPolicy.KEEP,Dailywork);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
